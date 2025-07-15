@@ -1,9 +1,9 @@
 :root {
-    --primary-color: #6f42c1;
-    --secondary-color: #ffc107;
-    --accent-color: #e83e8c;
-    --dark-color: #212529;
-    --light-color: #f8f9fa;
+    --primary-color: #ff6600;      /* Orange */
+    --secondary-color: #ff8c42;    /* Lighter Orange */
+    --accent-color: #ff69b4;       /* Pink */
+    --dark-color: #1a1a1a;         /* Black */
+    --light-color: #ffffff;        /* White */
 }
 
 * {
@@ -16,13 +16,13 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     padding-top: 76px;
-    color: var(--dark);
-    background-color: #f9f9f9;
+    color: var(--dark-color);
+    background-color: #fafafa;
 }
 
 header {
-    background-color: #4CAF50;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--light-color);
     padding: 1rem;
     text-align: center;
 }
@@ -41,7 +41,7 @@ section {
 }
 
 h2 {
-    color: #4CAF50;
+    color: var(--primary-color);
 }
 
 ul {
@@ -56,8 +56,8 @@ ul li {
 footer {
     text-align: center;
     padding: 1rem;
-    background-color: #333;
-    color: white;
+    background-color: var(--dark-color);
+    color: var(--light-color);
 }
 
 .container {
@@ -68,7 +68,7 @@ footer {
 
 /* Navigation */
 nav {
-    background: white;
+    background: var(--light-color);
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     position: fixed;
     width: 100%;
@@ -90,9 +90,13 @@ nav {
 }
 
 .nav-links a {
-    color: var(--dark);
+    color: var(--dark-color);
     text-decoration: none;
     font-weight: 500;
+}
+
+.nav-links a:hover {
+    color: var(--primary-color);
 }
 
 /* Hero Section */
@@ -106,7 +110,7 @@ nav {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
     position: relative;
     overflow: hidden;
-    color: white;
+    color: var(--light-color);
 }
 
 .hero::before {
@@ -128,11 +132,16 @@ nav {
 .cta-button {
     display: inline-block;
     padding: 1rem 2rem;
-    background: var(--primary);
-    color: white;
+    background: var(--primary-color);
+    color: var(--light-color);
     text-decoration: none;
     border-radius: 5px;
     margin-top: 2rem;
+}
+
+.cta-button:hover {
+    background: var(--secondary-color);
+    color: var(--light-color);
 }
 
 /* Grid Layouts */
@@ -145,23 +154,28 @@ nav {
 
 .principle-card, .service-card {
     padding: 2rem;
-    background: white;
+    background: var(--light-color);
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-left: 4px solid var(--primary-color);
+}
+
+.principle-card:nth-child(even), .service-card:nth-child(even) {
+    border-left-color: var(--accent-color);
 }
 
 /* Buttons and Links */
 .btn-warning {
     background-color: var(--secondary-color);
     border-color: var(--secondary-color);
-    color: var(--dark-color);
+    color: var(--light-color);
     font-weight: 600;
 }
 
 .btn-warning:hover {
-    background-color: #e0a800;
-    border-color: #d39e00;
-    color: var(--dark-color);
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--light-color);
 }
 
 .text-warning {
@@ -170,6 +184,7 @@ nav {
 
 .bg-warning {
     background-color: var(--secondary-color) !important;
+    color: var(--light-color) !important;
 }
 
 /* Cards */
@@ -185,6 +200,14 @@ nav {
 /* Sections */
 .display-5 {
     color: var(--dark-color);
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
 }
 
 /* Animations */
@@ -282,13 +305,13 @@ nav {
 }
 
 .program-card:nth-child(even) {
-    border-left-color: var(--secondary-color);
+    border-left-color: var(--accent-color);
 }
 
 /* Contact form styles */
 .form-control:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(255, 102, 0, 0.25);
 }
 
 .btn-primary {
@@ -297,6 +320,37 @@ nav {
 }
 
 .btn-primary:hover {
-    background-color: #5a359a;
-    border-color: #533087;
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--light-color);
+}
+
+/* Additional color utilities */
+.text-accent {
+    color: var(--accent-color) !important;
+}
+
+.bg-accent {
+    background-color: var(--accent-color) !important;
+    color: var(--light-color) !important;
+}
+
+.navbar-dark {
+    background-color: var(--primary-color) !important;
+}
+
+.alert-warning {
+    background-color: rgba(255, 140, 66, 0.1);
+    border-color: var(--secondary-color);
+    color: var(--dark-color);
 }
