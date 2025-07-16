@@ -67,7 +67,7 @@ class AuthAPI {
                      WHERE username = :username AND is_active = 1";
             
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':username', $username);
+            $stmt->bindValue(':username', $username);
             $stmt->execute();
 
             if ($stmt->rowCount() == 1) {
@@ -82,17 +82,17 @@ class AuthAPI {
                                     VALUES (:session_id, :user_id, :ip_address, :user_agent, :expires_at)";
                     
                     $session_stmt = $this->conn->prepare($session_query);
-                    $session_stmt->bindParam(':session_id', $session_id);
-                    $session_stmt->bindParam(':user_id', $user['id']);
-                    $session_stmt->bindParam(':ip_address', $_SERVER['REMOTE_ADDR'] ?? 'unknown');
-                    $session_stmt->bindParam(':user_agent', $_SERVER['HTTP_USER_AGENT'] ?? 'unknown');
-                    $session_stmt->bindParam(':expires_at', $expires_at);
+                    $session_stmt->bindValue(':session_id', $session_id);
+                    $session_stmt->bindValue(':user_id', $user['id']);
+                    $session_stmt->bindValue(':ip_address', $_SERVER['REMOTE_ADDR'] ?? 'unknown');
+                    $session_stmt->bindValue(':user_agent', $_SERVER['HTTP_USER_AGENT'] ?? 'unknown');
+                    $session_stmt->bindValue(':expires_at', $expires_at);
                     $session_stmt->execute();
 
                     // Update last login
                     $update_query = "UPDATE admin_users SET last_login = NOW() WHERE id = :user_id";
                     $update_stmt = $this->conn->prepare($update_query);
-                    $update_stmt->bindParam(':user_id', $user['id']);
+                    $update_stmt->bindValue(':user_id', $user['id']);
                     $update_stmt->execute();
 
                     return [
@@ -123,14 +123,14 @@ class AuthAPI {
                      WHERE s.id = :session_id AND s.expires_at > NOW() AND u.is_active = 1";
             
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':session_id', $session_id);
+            $stmt->bindValue(':session_id', $session_id);
             $stmt->execute();
 
             if ($stmt->rowCount() == 1) {
                 // Update last activity
                 $update_query = "UPDATE admin_sessions SET last_activity = NOW() WHERE id = :session_id";
                 $update_stmt = $this->conn->prepare($update_query);
-                $update_stmt->bindParam(':session_id', $session_id);
+                $update_stmt->bindValue(':session_id', $session_id);
                 $update_stmt->execute();
 
                 return ['success' => true, 'user' => $stmt->fetch()];
@@ -147,7 +147,7 @@ class AuthAPI {
         try {
             $query = "DELETE FROM admin_sessions WHERE id = :session_id";
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':session_id', $session_id);
+            $stmt->bindValue(':session_id', $session_id);
             $stmt->execute();
 
             return ['success' => true, 'message' => 'Logged out successfully'];
@@ -172,13 +172,13 @@ try {
                     echo json_encode($auth->testConnection());
                     break;
                 case 'login':
-                    echo json_encode($auth->login($input['username'], $input['password']));
+                    echo json_encode($auth->login($input['username'] ?? '', $input['password'] ?? ''));
                     break;
                 case 'validate':
-                    echo json_encode($auth->validateSession($input['session_id']));
+                    echo json_encode($auth->validateSession($input['session_id'] ?? ''));
                     break;
                 case 'logout':
-                    echo json_encode($auth->logout($input['session_id']));
+                    echo json_encode($auth->logout($input['session_id'] ?? ''));
                     break;
                 default:
                     echo json_encode(['success' => false, 'message' => 'Invalid action']);
