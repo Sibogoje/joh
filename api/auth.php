@@ -187,4 +187,6 @@ try {
     error_log("API Error: " . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
 }
+
+///////////////////////
 ?>
