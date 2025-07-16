@@ -10,3 +10,5 @@ echo "Hash: " . $hash . "\n";
 echo "\nSQL Update Command:\n";
 echo "UPDATE admin_users SET password_hash = '$hash' WHERE username = 'admin';\n";
 ?>
+
+/////////
