@@ -5,11 +5,11 @@ ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 
 // Start with basic test
-echo json_encode(['test' => 'PHP is working', 'timestamp' => date('Y-m-d H:i:s')]);
-exit;
+// echo json_encode(['test' => 'PHP is working', 'timestamp' => date('Y-m-d H:i:s')]);
+// exit;
 
 // Comment out everything else for now to test basic PHP functionality
-/*
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
@@ -196,3 +196,5 @@ try {
 
 ///////////////////////
 */
+
+?>

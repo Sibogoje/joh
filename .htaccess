@@ -40,19 +40,19 @@
     ExpiresByType image/svg+xml "access plus 1 hour"
 </IfModule>
 
-# Security headers
+# Security headers - Testing each one individually
 <IfModule mod_headers.c>
     # Prevent clickjacking
-    Header always append X-Frame-Options SAMEORIGIN
+    # Header always append X-Frame-Options SAMEORIGIN
     
     # XSS Protection
-    Header set X-XSS-Protection "1; mode=block"
+    # Header set X-XSS-Protection "1; mode=block"
     
     # Content type sniffing protection
-    Header set X-Content-Type-Options nosniff
+    # Header set X-Content-Type-Options nosniff
     
     # Referrer policy
-    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    # Header set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>
 
 # Protect sensitive files
