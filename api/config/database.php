@@ -1,6 +1,6 @@
 <?php
 // filepath: g:\My Drive\Projects\joh\api\config\database.php
-<?php
+
 class Database {
     private $host = "srv1212.hstgr.io";
     private $db_name = "u747325399_joh";
