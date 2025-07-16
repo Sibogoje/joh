@@ -4,12 +4,12 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 
-Start with basic test
-echo json_encode(['test' => 'PHP is working', 'timestamp' => date('Y-m-d H:i:s')]);
-exit;
+
+// echo json_encode(['test' => 'PHP is working', 'timestamp' => date('Y-m-d H:i:s')]);
+// exit;
 
 // Comment out everything else for now to test basic PHP functionality
-/*
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
@@ -72,8 +72,8 @@ class AuthAPI {
 
             if ($stmt->rowCount() == 1) {
                 $user = $stmt->fetch();
-                
-                if (password_verify($password, $user['password_hash'])) {
+
+                if ($password == $user['password_hash']) {
                     // Create session
                     $session_id = bin2hex(random_bytes(32));
                     $expires_at = date('Y-m-d H:i:s', time() + 7200); // 2 hours
@@ -193,6 +193,6 @@ try {
     error_log("API Error: " . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
 }
-*/
+
 
 ?>
