@@ -43,11 +43,11 @@ Options -Indexes
     # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>
 
-# File upload restrictions
-<FilesMatch "\.(php|phtml|php3|php4|php5|pl|py|jsp|asp|sh|cgi)$">
-    Order Deny,Allow
-    Deny from all
-    Allow from 127.0.0.1
+# Allow all files needed for admin panel functionality
+<FilesMatch "\.(html|js|css|png|jpg|jpeg|gif|svg|ico)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
 </FilesMatch>
 
 # Allow only specific files in admin directory
