@@ -1,8 +1,8 @@
 <?php
 // Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ini_set('log_errors', 1);
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('log_errors', 1);
 
 // Start with basic test
 // echo json_encode(['test' => 'PHP is working', 'timestamp' => date('Y-m-d H:i:s')]);
