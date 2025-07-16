@@ -24,7 +24,7 @@ class PostsAPI {
     private function validateSession($session_id) {
         $query = "SELECT user_id FROM admin_sessions WHERE id = :session_id AND expires_at > NOW()";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':session_id', $session_id);
+        $stmt->bindValue(':session_id', $session_id);
         $stmt->execute();
         
         return $stmt->rowCount() == 1 ? $stmt->fetch()['user_id'] : false;
@@ -65,7 +65,7 @@ class PostsAPI {
             }
 
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
 
             if ($stmt->rowCount() == 1) {
@@ -92,20 +92,20 @@ class PostsAPI {
                      VALUES (:title, :slug, :content, :excerpt, :category, :status, :author_id, :published_at, :meta_title, :meta_description)";
             
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':title', $data['title']);
-            $stmt->bindParam(':slug', $slug);
-            $stmt->bindParam(':content', $data['content']);
-            $stmt->bindParam(':excerpt', $data['excerpt']);
-            $stmt->bindParam(':category', $data['category']);
-            $stmt->bindParam(':status', $data['status']);
-            $stmt->bindParam(':author_id', $user_id);
+            $stmt->bindValue(':title', $data['title']);
+            $stmt->bindValue(':slug', $slug);
+            $stmt->bindValue(':content', $data['content']);
+            $stmt->bindValue(':excerpt', $data['excerpt']);
+            $stmt->bindValue(':category', $data['category']);
+            $stmt->bindValue(':status', $data['status']);
+            $stmt->bindValue(':author_id', $user_id);
             
             $published_at = $data['status'] === 'published' ? 
                 ($data['published_at'] ?? date('Y-m-d H:i:s')) : null;
-            $stmt->bindParam(':published_at', $published_at);
+            $stmt->bindValue(':published_at', $published_at);
             
-            $stmt->bindParam(':meta_title', $data['meta_title'] ?? $data['title']);
-            $stmt->bindParam(':meta_description', $data['meta_description'] ?? $data['excerpt']);
+            $stmt->bindValue(':meta_title', $data['meta_title'] ?? $data['title']);
+            $stmt->bindValue(':meta_description', $data['meta_description'] ?? $data['excerpt']);
             
             $stmt->execute();
 
@@ -133,20 +133,20 @@ class PostsAPI {
                      WHERE id = :id";
             
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':id', $id);
-            $stmt->bindParam(':title', $data['title']);
-            $stmt->bindParam(':slug', $slug);
-            $stmt->bindParam(':content', $data['content']);
-            $stmt->bindParam(':excerpt', $data['excerpt']);
-            $stmt->bindParam(':category', $data['category']);
-            $stmt->bindParam(':status', $data['status']);
+            $stmt->bindValue(':id', $id);
+            $stmt->bindValue(':title', $data['title']);
+            $stmt->bindValue(':slug', $slug);
+            $stmt->bindValue(':content', $data['content']);
+            $stmt->bindValue(':excerpt', $data['excerpt']);
+            $stmt->bindValue(':category', $data['category']);
+            $stmt->bindValue(':status', $data['status']);
             
             $published_at = $data['status'] === 'published' ? 
                 ($data['published_at'] ?? date('Y-m-d H:i:s')) : null;
-            $stmt->bindParam(':published_at', $published_at);
+            $stmt->bindValue(':published_at', $published_at);
             
-            $stmt->bindParam(':meta_title', $data['meta_title'] ?? $data['title']);
-            $stmt->bindParam(':meta_description', $data['meta_description'] ?? $data['excerpt']);
+            $stmt->bindValue(':meta_title', $data['meta_title'] ?? $data['title']);
+            $stmt->bindValue(':meta_description', $data['meta_description'] ?? $data['excerpt']);
             
             $stmt->execute();
 
@@ -166,7 +166,7 @@ class PostsAPI {
         try {
             $query = "DELETE FROM posts WHERE id = :id";
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
 
             return ['success' => true, 'message' => 'Post deleted successfully'];
@@ -196,9 +196,9 @@ class PostsAPI {
         }
         
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':slug', $slug);
+        $stmt->bindValue(':slug', $slug);
         if ($exclude_id) {
-            $stmt->bindParam(':exclude_id', $exclude_id);
+            $stmt->bindValue(':exclude_id', $exclude_id);
         }
         $stmt->execute();
 
