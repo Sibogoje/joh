@@ -5,6 +5,16 @@ class AdminAuth {
         this.sessionKey = 'admin_session_id';
     }
 
+    // Handle login form submission
+    handleLoginFormSubmit(event) {
+        event.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        this.login(username, password);
+    }
+
     // Add cache-busting parameter to URL
     getCacheBustUrl(url) {
         const separator = url.includes('?') ? '&' : '?';
@@ -95,7 +105,10 @@ class AdminAuth {
                 sessionStorage.setItem('admin_user', JSON.stringify(result.user));
                 return true;
             } else {
-                this.logout();
+                // Don't automatically logout, just return false
+                console.log('Session validation failed:', result.message);
+                sessionStorage.removeItem(this.sessionKey);
+                sessionStorage.removeItem('admin_user');
                 return false;
             }
         } catch (error) {
@@ -116,8 +129,15 @@ class AdminAuth {
     async requireAuth() {
         const isValid = await this.validateSession();
         if (!isValid) {
-            window.location.href = 'index.html';
+            // Only redirect if we're not already on the login page
+            if (window.location.pathname.indexOf('index.html') === -1 && 
+                window.location.pathname.indexOf('/admin/') !== -1 && 
+                !window.location.pathname.endsWith('/admin/') &&
+                !window.location.pathname.endsWith('/admin/index.html')) {
+                window.location.href = 'index.html';
+            }
         }
+        return isValid;
     }
 }
 
@@ -142,11 +162,28 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.disabled = true;
 
             try {
-                const success = await auth.login(username, password);
+                const response = await fetch(auth.getCacheBustUrl(auth.apiUrl), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache, no-store, must-revalidate'
+                    },
+                    body: JSON.stringify({
+                        action: 'login',
+                        username: username,
+                        password: password
+                    })
+                });
+
+                const result = await response.json();
+                console.log('Login response:', result);
                 
-                if (success) {
+                if (result.success) {
+                    sessionStorage.setItem(auth.sessionKey, result.session_id);
+                    sessionStorage.setItem('admin_user', JSON.stringify(result.user));
                     window.location.href = 'dashboard.html';
                 } else {
+                    document.getElementById('loginErrorMessage').textContent = result.message || 'Login failed';
                     alert.classList.remove('d-none');
                     setTimeout(() => {
                         alert.classList.add('d-none');
@@ -154,6 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             } catch (error) {
                 console.error('Login failed:', error);
+                document.getElementById('loginErrorMessage').textContent = 'Network error: ' + error.message;
                 alert.classList.remove('d-none');
             } finally {
                 // Restore button state
