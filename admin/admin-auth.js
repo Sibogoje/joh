@@ -1,48 +1,106 @@
-// Admin authentication system
+// Admin authentication system with PHP backend
 class AdminAuth {
     constructor() {
-        this.credentials = {
-            username: 'admin',
-            password: 'journey2024!' // In production, use proper authentication
-        };
+        this.apiUrl = '../api/auth.php';
+        this.sessionKey = 'admin_session_id';
     }
 
-    login(username, password) {
-        if (username === this.credentials.username && password === this.credentials.password) {
-            sessionStorage.setItem('adminLoggedIn', 'true');
-            sessionStorage.setItem('adminLoginTime', new Date().getTime());
-            return true;
-        }
-        return false;
-    }
+    async login(username, password) {
+        try {
+            const response = await fetch(this.apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'login',
+                    username: username,
+                    password: password
+                })
+            });
 
-    logout() {
-        sessionStorage.removeItem('adminLoggedIn');
-        sessionStorage.removeItem('adminLoginTime');
-        window.location.href = 'index.html';
-    }
-
-    isLoggedIn() {
-        const loggedIn = sessionStorage.getItem('adminLoggedIn');
-        const loginTime = sessionStorage.getItem('adminLoginTime');
-        
-        if (!loggedIn) return false;
-        
-        // Check if session is older than 2 hours
-        const currentTime = new Date().getTime();
-        const sessionAge = currentTime - parseInt(loginTime);
-        const maxAge = 2 * 60 * 60 * 1000; // 2 hours
-        
-        if (sessionAge > maxAge) {
-            this.logout();
+            const result = await response.json();
+            
+            if (result.success) {
+                sessionStorage.setItem(this.sessionKey, result.session_id);
+                sessionStorage.setItem('admin_user', JSON.stringify(result.user));
+                return true;
+            }
+            
+            return false;
+        } catch (error) {
+            console.error('Login error:', error);
             return false;
         }
-        
-        return true;
     }
 
-    requireAuth() {
-        if (!this.isLoggedIn()) {
+    async logout() {
+        try {
+            const sessionId = sessionStorage.getItem(this.sessionKey);
+            if (sessionId) {
+                await fetch(this.apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'logout',
+                        session_id: sessionId
+                    })
+                });
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
+            sessionStorage.removeItem(this.sessionKey);
+            sessionStorage.removeItem('admin_user');
+            window.location.href = 'index.html';
+        }
+    }
+
+    async validateSession() {
+        const sessionId = sessionStorage.getItem(this.sessionKey);
+        if (!sessionId) return false;
+
+        try {
+            const response = await fetch(this.apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'validate',
+                    session_id: sessionId
+                })
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                sessionStorage.setItem('admin_user', JSON.stringify(result.user));
+                return true;
+            } else {
+                this.logout();
+                return false;
+            }
+        } catch (error) {
+            console.error('Session validation error:', error);
+            return false;
+        }
+    }
+
+    getSessionId() {
+        return sessionStorage.getItem(this.sessionKey);
+    }
+
+    getCurrentUser() {
+        const user = sessionStorage.getItem('admin_user');
+        return user ? JSON.parse(user) : null;
+    }
+
+    async requireAuth() {
+        const isValid = await this.validateSession();
+        if (!isValid) {
             window.location.href = 'index.html';
         }
     }
@@ -55,20 +113,37 @@ const auth = new AdminAuth();
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
+        loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const alert = document.getElementById('loginAlert');
             
-            if (auth.login(username, password)) {
-                window.location.href = 'dashboard.html';
-            } else {
+            // Show loading state
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Logging in...';
+            submitBtn.disabled = true;
+
+            try {
+                const success = await auth.login(username, password);
+                
+                if (success) {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    alert.classList.remove('d-none');
+                    setTimeout(() => {
+                        alert.classList.add('d-none');
+                    }, 5000);
+                }
+            } catch (error) {
+                console.error('Login failed:', error);
                 alert.classList.remove('d-none');
-                setTimeout(() => {
-                    alert.classList.add('d-none');
-                }, 5000);
+            } finally {
+                // Restore button state
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
             }
         });
     }
