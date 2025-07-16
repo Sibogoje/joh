@@ -1,15 +1,15 @@
 <?php
 // Enable error reporting for debugging
-// error_reporting(E_ALL);
-// ini_set('display_errors', 1);
-// ini_set('log_errors', 1);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
 
-// Start with basic test
-// echo json_encode(['test' => 'PHP is working', 'timestamp' => date('Y-m-d H:i:s')]);
-// exit;
+Start with basic test
+echo json_encode(['test' => 'PHP is working', 'timestamp' => date('Y-m-d H:i:s')]);
+exit;
 
 // Comment out everything else for now to test basic PHP functionality
-
+/*
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
@@ -193,6 +193,6 @@ try {
     error_log("API Error: " . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
 }
-
+*/
 
 ?>
