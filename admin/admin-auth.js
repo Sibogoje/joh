@@ -5,12 +5,21 @@ class AdminAuth {
         this.sessionKey = 'admin_session_id';
     }
 
+    // Add cache-busting parameter to URL
+    getCacheBustUrl(url) {
+        const separator = url.includes('?') ? '&' : '?';
+        return `${url}${separator}_cb=${Date.now()}&_r=${Math.random()}`;
+    }
+
     async login(username, password) {
         try {
-            const response = await fetch(this.apiUrl, {
+            const response = await fetch(this.getCacheBustUrl(this.apiUrl), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
                 },
                 body: JSON.stringify({
                     action: 'login',
@@ -38,10 +47,12 @@ class AdminAuth {
         try {
             const sessionId = sessionStorage.getItem(this.sessionKey);
             if (sessionId) {
-                await fetch(this.apiUrl, {
+                await fetch(this.getCacheBustUrl(this.apiUrl), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache'
                     },
                     body: JSON.stringify({
                         action: 'logout',
@@ -52,8 +63,9 @@ class AdminAuth {
         } catch (error) {
             console.error('Logout error:', error);
         } finally {
-            sessionStorage.removeItem(this.sessionKey);
-            sessionStorage.removeItem('admin_user');
+            // Clear all cache-related storage
+            sessionStorage.clear();
+            localStorage.clear();
             window.location.href = 'index.html';
         }
     }
@@ -63,10 +75,13 @@ class AdminAuth {
         if (!sessionId) return false;
 
         try {
-            const response = await fetch(this.apiUrl, {
+            const response = await fetch(this.getCacheBustUrl(this.apiUrl), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
                 },
                 body: JSON.stringify({
                     action: 'validate',

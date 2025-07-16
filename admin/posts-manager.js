@@ -1,13 +1,15 @@
 // Posts management system
 class PostsManager {
     constructor() {
-        this.posts = this.loadPosts();
+        this.apiUrl = '../api/posts.php';
+        this.posts = [];
         this.currentEditId = null;
         this.init();
     }
 
-    init() {
-        auth.requireAuth();
+    async init() {
+        await auth.requireAuth();
+        await this.loadPosts();
         this.renderPostsList();
         this.setupEventListeners();
         
@@ -15,54 +17,53 @@ class PostsManager {
         document.getElementById('postDate').value = new Date().toISOString().split('T')[0];
     }
 
-    loadPosts() {
-        const savedPosts = localStorage.getItem('journeyOfHopePosts');
-        if (savedPosts) {
-            return JSON.parse(savedPosts);
-        }
-        
-        // Default posts
-        return [
-            {
-                id: 1,
-                title: "One Billion Rising 2024: A Resounding Success Across Eswatini",
-                content: "This year's One Billion Rising events across all four regions of Eswatini marked a significant milestone in our fight against gender-based violence...",
-                excerpt: "Thousands of women and girls rose together, dancing for justice and transformation.",
-                category: "rising",
-                status: "published",
-                date: "2024-02-14",
-                author: "Colani Hlatjwako"
-            },
-            {
-                id: 2,
-                title: "New Community Circle Launched in Lubombo",
-                content: "We're excited to announce the establishment of our newest community circle in the Lubombo region...",
-                excerpt: "Bringing our total to 42 circles across Eswatini.",
-                category: "community",
-                status: "published",
-                date: "2024-03-15",
-                author: "Admin"
-            },
-            {
-                id: 3,
-                title: "Feminist Leadership Training Success",
-                content: "Our latest feminist leadership training session empowered 50 women with knowledge about their rights...",
-                excerpt: "Empowering women with knowledge about their rights and governance principles.",
-                category: "training",
-                status: "draft",
-                date: "2024-03-08",
-                author: "Admin"
-            }
-        ];
-    }
+    async loadPosts() {
+        try {
+            const sessionId = auth.getSessionId();
+            const url = `${this.apiUrl}?session_id=${sessionId}&_t=${Date.now()}`;
+            
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            });
 
-    savePosts() {
-        localStorage.setItem('journeyOfHopePosts', JSON.stringify(this.posts));
+            const result = await response.json();
+            
+            if (result.success) {
+                this.posts = result.posts;
+                console.log('Loaded posts from database:', this.posts); // Debug log
+                return true;
+            } else {
+                console.error('Failed to load posts:', result.message);
+                this.showAlert(result.message || 'Failed to load posts', 'danger');
+                return false;
+            }
+        } catch (error) {
+            console.error('Load posts error:', error);
+            this.showAlert('Failed to load posts', 'danger');
+            return false;
+        }
     }
 
     renderPostsList() {
         const tbody = document.getElementById('postsTableBody');
         tbody.innerHTML = '';
+
+        if (this.posts.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">
+                        <i class="fas fa-inbox fa-2x mb-2"></i><br>
+                        No posts found. <a href="#" onclick="showNewPostForm()">Create your first post</a>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
 
         this.posts.forEach(post => {
             const statusBadge = post.status === 'published' 
@@ -70,6 +71,8 @@ class PostsManager {
                 : '<span class="badge bg-warning text-dark">Draft</span>';
 
             const categoryBadge = this.getCategoryBadge(post.category);
+            const postDate = post.published_at || post.created_at;
+            const formattedDate = new Date(postDate).toLocaleDateString();
 
             tbody.innerHTML += `
                 <tr>
@@ -79,7 +82,7 @@ class PostsManager {
                     </td>
                     <td>${categoryBadge}</td>
                     <td>${statusBadge}</td>
-                    <td>${new Date(post.date).toLocaleDateString()}</td>
+                    <td>${formattedDate}</td>
                     <td>
                         <button class="btn btn-sm btn-outline-primary me-1" onclick="postsManager.editPost(${post.id})">
                             <i class="fas fa-edit"></i>
@@ -123,61 +126,130 @@ class PostsManager {
         document.getElementById('postEditorView').classList.remove('d-none');
     }
 
-    editPost(id) {
-        const post = this.posts.find(p => p.id === id);
-        if (!post) return;
+    async editPost(id) {
+        try {
+            const sessionId = auth.getSessionId();
+            const url = `${this.apiUrl}?id=${id}&session_id=${sessionId}&_t=${Date.now()}`;
+            
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate'
+                }
+            });
 
-        this.currentEditId = id;
-        document.getElementById('editorTitle').textContent = 'Edit Post';
-        document.getElementById('postTitle').value = post.title;
-        document.getElementById('postContent').value = post.content;
-        document.getElementById('postCategory').value = post.category;
-        document.getElementById('postStatus').value = post.status;
-        document.getElementById('postDate').value = post.date;
-        document.getElementById('postExcerpt').value = post.excerpt || '';
-        
-        document.getElementById('postsListView').classList.add('d-none');
-        document.getElementById('postEditorView').classList.remove('d-none');
+            const result = await response.json();
+            
+            if (result.success) {
+                const post = result.post;
+                this.currentEditId = id;
+                
+                document.getElementById('editorTitle').textContent = 'Edit Post';
+                document.getElementById('postTitle').value = post.title;
+                document.getElementById('postContent').value = post.content;
+                document.getElementById('postCategory').value = post.category;
+                document.getElementById('postStatus').value = post.status;
+                document.getElementById('postDate').value = post.published_at ? post.published_at.split(' ')[0] : '';
+                document.getElementById('postExcerpt').value = post.excerpt || '';
+                
+                document.getElementById('postsListView').classList.add('d-none');
+                document.getElementById('postEditorView').classList.remove('d-none');
+            } else {
+                this.showAlert('Failed to load post for editing', 'danger');
+            }
+        } catch (error) {
+            console.error('Edit post error:', error);
+            this.showAlert('Failed to load post for editing', 'danger');
+        }
     }
 
-    savePost() {
+    async savePost() {
         const formData = {
             title: document.getElementById('postTitle').value,
             content: document.getElementById('postContent').value,
             category: document.getElementById('postCategory').value,
             status: document.getElementById('postStatus').value,
-            date: document.getElementById('postDate').value,
+            published_at: document.getElementById('postDate').value,
             excerpt: document.getElementById('postExcerpt').value,
-            author: 'Admin'
+            session_id: auth.getSessionId()
         };
 
-        if (this.currentEditId) {
-            // Update existing post
-            const postIndex = this.posts.findIndex(p => p.id === this.currentEditId);
-            this.posts[postIndex] = { ...this.posts[postIndex], ...formData };
-        } else {
-            // Create new post
-            const newId = Math.max(...this.posts.map(p => p.id), 0) + 1;
-            this.posts.push({ id: newId, ...formData });
-        }
+        try {
+            let response;
+            
+            if (this.currentEditId) {
+                // Update existing post
+                formData.id = this.currentEditId;
+                response = await fetch(this.apiUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
+                    body: JSON.stringify(formData)
+                });
+            } else {
+                // Create new post
+                response = await fetch(this.apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
+                    body: JSON.stringify(formData)
+                });
+            }
 
-        this.savePosts();
-        this.showPostsList();
-        this.showAlert('Post saved successfully!', 'success');
+            const result = await response.json();
+            
+            if (result.success) {
+                await this.loadPosts(); // Refresh posts from server
+                this.showPostsList();
+                this.showAlert('Post saved successfully!', 'success');
+            } else {
+                this.showAlert(result.message || 'Failed to save post', 'danger');
+            }
+        } catch (error) {
+            console.error('Save post error:', error);
+            this.showAlert('Failed to save post', 'danger');
+        }
     }
 
-    deletePost(id) {
+    async deletePost(id) {
         if (confirm('Are you sure you want to delete this post?')) {
-            this.posts = this.posts.filter(p => p.id !== id);
-            this.savePosts();
-            this.renderPostsList();
-            this.showAlert('Post deleted successfully!', 'success');
+            try {
+                const response = await fetch(this.apiUrl, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        session_id: auth.getSessionId()
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    await this.loadPosts(); // Refresh posts from server
+                    this.renderPostsList();
+                    this.showAlert('Post deleted successfully!', 'success');
+                } else {
+                    this.showAlert(result.message || 'Failed to delete post', 'danger');
+                }
+            } catch (error) {
+                console.error('Delete post error:', error);
+                this.showAlert('Failed to delete post', 'danger');
+            }
         }
     }
 
-    showPostsList() {
+    async showPostsList() {
         document.getElementById('postEditorView').classList.add('d-none');
         document.getElementById('postsListView').classList.remove('d-none');
+        await this.loadPosts(); // Refresh posts when returning to list
         this.renderPostsList();
     }
 
@@ -221,18 +293,19 @@ class PostsManager {
         alertDiv.style.top = '20px';
         alertDiv.style.right = '20px';
         alertDiv.style.zIndex = '9999';
+        alertDiv.style.minWidth = '300px';
         alertDiv.innerHTML = `
             ${message}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         `;
         document.body.appendChild(alertDiv);
 
-        // Auto remove after 3 seconds
+        // Auto remove after 5 seconds
         setTimeout(() => {
             if (alertDiv.parentNode) {
                 alertDiv.parentNode.removeChild(alertDiv);
             }
-        }, 3000);
+        }, 5000);
     }
 }
 

@@ -1,0 +1,57 @@
+# Admin Panel - Enhanced Security and Cache Control
+
+# Strict no-cache policy for admin area
+<IfModule mod_headers.c>
+    Header set Cache-Control "no-cache, no-store, must-revalidate, private"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+    
+    # Additional security headers for admin area
+    Header always set X-Frame-Options "DENY"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
+# Disable caching completely for admin area
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 0 seconds"
+</IfModule>
+
+# IP restriction (uncomment and add your IP for production)
+# <RequireAll>
+#     Require ip 192.168.1.100
+#     Require ip 10.0.0.0/8
+# </RequireAll>
+
+# Disable directory browsing
+Options -Indexes
+
+# Protect against common attacks
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Block suspicious requests
+    RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+    RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
+    RewriteRule .* index.html [F,L]
+    
+    # Force HTTPS (uncomment for production)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# File upload restrictions
+<FilesMatch "\.(php|phtml|php3|php4|php5|pl|py|jsp|asp|sh|cgi)$">
+    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+</FilesMatch>
+
+# Allow only specific files in admin directory
+<FilesMatch "\.(html|js|css|png|jpg|jpeg|gif|svg|ico)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
