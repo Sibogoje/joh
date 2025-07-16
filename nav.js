@@ -1,23 +1,23 @@
 // Navigation component for Journey of Hope website
 document.addEventListener('DOMContentLoaded', function() {
     const navHTML = `
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top py-2">
             <div class="container">
                 <a class="navbar-brand fw-bold" href="index.html">
-                    <img src="logo.png" alt="Journey of Hope Logo" height="40" class="me-2">Journey of Hope
+                    <img src="logo.png" alt="Journey of Hope Logo" height="35" class="me-2">Journey of Hope
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="programs.html">Programs</a></li>
-                        <li class="nav-item"><a class="nav-link" href="get-involved.html">Get Involved</a></li>
-                        <li class="nav-item"><a class="nav-link" href="posts.html">Posts</a></li>
-                        <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
-                        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link fw-bold" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link fw-bold" href="about.html">About</a></li>
+                        <li class="nav-item"><a class="nav-link fw-bold" href="programs.html">Programs</a></li>
+                        <li class="nav-item"><a class="nav-link fw-bold" href="get-involved.html">Get Involved</a></li>
+                        <li class="nav-item"><a class="nav-link fw-bold" href="posts.html">Posts</a></li>
+                        <li class="nav-item"><a class="nav-link fw-bold" href="gallery.html">Gallery</a></li>
+                        <li class="nav-item"><a class="nav-link fw-bold" href="contact.html">Contact</a></li>
                     </ul>
                 </div>
             </div>
