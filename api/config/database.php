@@ -1,5 +1,8 @@
 <?php
 // filepath: g:\My Drive\Projects\joh\api\config\database.php
+// Enable error reporting
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 class Database {
     private $host = "srv1212.hstgr.io";
@@ -21,7 +24,7 @@ class Database {
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch(PDOException $exception) {
             error_log("Connection error: " . $exception->getMessage());
-            throw new Exception("Database connection failed");
+            throw new Exception("Database connection failed: " . $exception->getMessage());
         }
 
         return $this->conn;

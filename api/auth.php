@@ -1,5 +1,9 @@
 <?php
-// filepath: g:\My Drive\Projects\joh\api\auth.php
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
@@ -10,14 +14,44 @@ header('Cache-Control: no-cache, no-store, must-revalidate');
 header('Pragma: no-cache');
 header('Expires: 0');
 
-require_once 'config/database.php';
+try {
+    require_once 'config/database.php';
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'Database config error: ' . $e->getMessage()]);
+    exit;
+}
 
 class AuthAPI {
     private $conn;
 
     public function __construct() {
-        $database = new Database();
-        $this->conn = $database->getConnection();
+        try {
+            $database = new Database();
+            $this->conn = $database->getConnection();
+        } catch (Exception $e) {
+            throw new Exception('Database connection failed: ' . $e->getMessage());
+        }
+    }
+
+    public function testConnection() {
+        try {
+            // Test database connection
+            $query = "SELECT COUNT(*) as count FROM admin_users";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            
+            return [
+                'success' => true, 
+                'message' => 'Database connection successful',
+                'user_count' => $result['count']
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false, 
+                'message' => 'Database connection failed: ' . $e->getMessage()
+            ];
+        }
     }
 
     public function login($username, $password) {
@@ -44,8 +78,8 @@ class AuthAPI {
                     $session_stmt = $this->conn->prepare($session_query);
                     $session_stmt->bindParam(':session_id', $session_id);
                     $session_stmt->bindParam(':user_id', $user['id']);
-                    $session_stmt->bindParam(':ip_address', $_SERVER['REMOTE_ADDR']);
-                    $session_stmt->bindParam(':user_agent', $_SERVER['HTTP_USER_AGENT']);
+                    $session_stmt->bindParam(':ip_address', $_SERVER['REMOTE_ADDR'] ?? 'unknown');
+                    $session_stmt->bindParam(':user_agent', $_SERVER['HTTP_USER_AGENT'] ?? 'unknown');
                     $session_stmt->bindParam(':expires_at', $expires_at);
                     $session_stmt->execute();
 
@@ -71,7 +105,7 @@ class AuthAPI {
             return ['success' => false, 'message' => 'Invalid credentials'];
         } catch (Exception $e) {
             error_log("Login error: " . $e->getMessage());
-            return ['success' => false, 'message' => 'Login failed'];
+            return ['success' => false, 'message' => 'Login failed: ' . $e->getMessage()];
         }
     }
 
@@ -119,30 +153,38 @@ class AuthAPI {
 }
 
 // Handle requests
-$auth = new AuthAPI();
-$method = $_SERVER['REQUEST_METHOD'];
+try {
+    $auth = new AuthAPI();
+    $method = $_SERVER['REQUEST_METHOD'];
 
-if ($method === 'POST') {
-    $input = json_decode(file_get_contents('php://input'), true);
-    
-    if (isset($input['action'])) {
-        switch ($input['action']) {
-            case 'login':
-                echo json_encode($auth->login($input['username'], $input['password']));
-                break;
-            case 'validate':
-                echo json_encode($auth->validateSession($input['session_id']));
-                break;
-            case 'logout':
-                echo json_encode($auth->logout($input['session_id']));
-                break;
-            default:
-                echo json_encode(['success' => false, 'message' => 'Invalid action']);
+    if ($method === 'POST') {
+        $input = json_decode(file_get_contents('php://input'), true);
+        
+        if (isset($input['action'])) {
+            switch ($input['action']) {
+                case 'test':
+                    echo json_encode($auth->testConnection());
+                    break;
+                case 'login':
+                    echo json_encode($auth->login($input['username'], $input['password']));
+                    break;
+                case 'validate':
+                    echo json_encode($auth->validateSession($input['session_id']));
+                    break;
+                case 'logout':
+                    echo json_encode($auth->logout($input['session_id']));
+                    break;
+                default:
+                    echo json_encode(['success' => false, 'message' => 'Invalid action']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'No action specified']);
         }
     } else {
-        echo json_encode(['success' => false, 'message' => 'No action specified']);
+        echo json_encode(['success' => false, 'message' => 'Method not allowed']);
     }
-} else {
-    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+} catch (Exception $e) {
+    error_log("API Error: " . $e->getMessage());
+    echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
 }
 ?>
