@@ -96,13 +96,58 @@
                 
                 const result = await response.json();
                 console.log('Connection test result:', result);
+                document.getElementById('debugResponse').textContent = JSON.stringify(result);
             } catch (error) {
                 console.error('Connection test failed:', error);
+                document.getElementById('debugResponse').textContent = 'Error: ' + error.message;
             }
         }
         
+        // Override the auth login to show debug info
         if (DEBUG_MODE) {
             testConnection();
+            
+            // Add debug to login form
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+                    
+                    console.log('Attempting login with:', { username, password });
+                    
+                    try {
+                        const response = await fetch('../api/auth.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                action: 'login',
+                                username: username,
+                                password: password
+                            })
+                        });
+                        
+                        const result = await response.json();
+                        console.log('Login response:', result);
+                        document.getElementById('debugResponse').textContent = JSON.stringify(result);
+                        
+                        if (result.success) {
+                            window.location.href = 'dashboard.html';
+                        } else {
+                            document.getElementById('loginErrorMessage').textContent = result.message || 'Login failed';
+                            document.getElementById('loginAlert').classList.remove('d-none');
+                        }
+                    } catch (error) {
+                        console.error('Login error:', error);
+                        document.getElementById('loginErrorMessage').textContent = 'Network error: ' + error.message;
+                        document.getElementById('loginAlert').classList.remove('d-none');
+                    }
+                });
+            }
         }
     </script>
 </body>
