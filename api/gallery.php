@@ -14,7 +14,7 @@ require_once 'config/database.php';
 
 class GalleryAPI {
     private $conn;
-    private $uploadDir = '../uploads/gallery/';
+    private $uploadDir = '../admin/uploads/gallery/';
 
     public function __construct() {
         $database = new Database();
