@@ -48,7 +48,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs fw-bold text-primary text-uppercase mb-1">Total Posts</div>
-                                <div class="h5 mb-0 fw-bold text-gray-800" id="totalPosts">12</div>
+                                <div class="h5 mb-0 fw-bold text-gray-800" id="totalPosts">Loading...</div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-edit fa-2x text-primary"></i>
@@ -64,7 +64,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs fw-bold text-success text-uppercase mb-1">Gallery Images</div>
-                                <div class="h5 mb-0 fw-bold text-gray-800" id="totalImages">48</div>
+                                <div class="h5 mb-0 fw-bold text-gray-800" id="totalImages">Loading...</div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-images fa-2x text-success"></i>
@@ -80,7 +80,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs fw-bold text-warning text-uppercase mb-1">Draft Posts</div>
-                                <div class="h5 mb-0 fw-bold text-gray-800" id="draftPosts">3</div>
+                                <div class="h5 mb-0 fw-bold text-gray-800" id="draftPosts">Loading...</div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-file-alt fa-2x text-warning"></i>
@@ -95,11 +95,11 @@
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs fw-bold text-info text-uppercase mb-1">Last Updated</div>
-                                <div class="h6 mb-0 fw-bold text-gray-800" id="lastUpdated">Today</div>
+                                <div class="text-xs fw-bold text-info text-uppercase mb-1">Published Posts</div>
+                                <div class="h5 mb-0 fw-bold text-gray-800" id="publishedPosts">Loading...</div>
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-clock fa-2x text-info"></i>
+                                <i class="fas fa-check-circle fa-2x text-info"></i>
                             </div>
                         </div>
                     </div>
@@ -171,33 +171,9 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="recentPostsTable">
                             <tr>
-                                <td>One Billion Rising 2024: A Resounding Success</td>
-                                <td><span class="badge bg-success">Published</span></td>
-                                <td>Feb 14, 2024</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary">Edit</button>
-                                    <button class="btn btn-sm btn-outline-danger">Delete</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>New Community Circle in Lubombo</td>
-                                <td><span class="badge bg-success">Published</span></td>
-                                <td>Mar 15, 2024</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary">Edit</button>
-                                    <button class="btn btn-sm btn-outline-danger">Delete</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Feminist Leadership Training</td>
-                                <td><span class="badge bg-warning text-dark">Draft</span></td>
-                                <td>Mar 20, 2024</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary">Edit</button>
-                                    <button class="btn btn-sm btn-outline-danger">Delete</button>
-                                </td>
+                                <td colspan="4" class="text-center">Loading recent posts...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -212,11 +188,172 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="admin-auth.js"></script>
     <script>
-        // Check authentication
-        auth.requireAuth();
-        
-        // Update last updated time
-        document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString();
+        // Dashboard data loader
+        class DashboardLoader {
+            constructor() {
+                this.postsApi = '../api/posts.php';
+                this.galleryApi = '../api/gallery.php';
+                this.init();
+            }
+
+            async init() {
+                await auth.requireAuth();
+                await this.loadDashboardData();
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString();
+            }
+
+            async loadDashboardData() {
+                try {
+                    await Promise.all([
+                        this.loadPostsStats(),
+                        this.loadGalleryStats(),
+                        this.loadRecentPosts()
+                    ]);
+                } catch (error) {
+                    console.error('Error loading dashboard data:', error);
+                }
+            }
+
+            async loadPostsStats() {
+                try {
+                    const sessionId = auth.getSessionId();
+                    const response = await fetch(`${this.postsApi}?session_id=${sessionId}&_t=${Date.now()}`, {
+                        headers: { 'Cache-Control': 'no-cache' }
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        const posts = result.posts;
+                        const totalPosts = posts.length;
+                        const draftPosts = posts.filter(p => p.status === 'draft').length;
+                        const publishedPosts = posts.filter(p => p.status === 'published').length;
+
+                        document.getElementById('totalPosts').textContent = totalPosts;
+                        document.getElementById('draftPosts').textContent = draftPosts;
+                        document.getElementById('publishedPosts').textContent = publishedPosts;
+                    } else {
+                        this.showError('totalPosts', 'Error');
+                        this.showError('draftPosts', 'Error');
+                        this.showError('publishedPosts', 'Error');
+                    }
+                } catch (error) {
+                    console.error('Error loading posts stats:', error);
+                    this.showError('totalPosts', 'Error');
+                    this.showError('draftPosts', 'Error');
+                    this.showError('publishedPosts', 'Error');
+                }
+            }
+
+            async loadGalleryStats() {
+                try {
+                    const sessionId = auth.getSessionId();
+                    const response = await fetch(`${this.galleryApi}?session_id=${sessionId}&_t=${Date.now()}`, {
+                        headers: { 'Cache-Control': 'no-cache' }
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        const totalImages = result.images.length;
+                        document.getElementById('totalImages').textContent = totalImages;
+                    } else {
+                        this.showError('totalImages', 'Error');
+                    }
+                } catch (error) {
+                    console.error('Error loading gallery stats:', error);
+                    this.showError('totalImages', 'Error');
+                }
+            }
+
+            async loadRecentPosts() {
+                try {
+                    const sessionId = auth.getSessionId();
+                    const response = await fetch(`${this.postsApi}?session_id=${sessionId}&_t=${Date.now()}`, {
+                        headers: { 'Cache-Control': 'no-cache' }
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        const recentPosts = result.posts.slice(0, 5); // Get latest 5 posts
+                        this.renderRecentPosts(recentPosts);
+                    } else {
+                        this.showRecentPostsError();
+                    }
+                } catch (error) {
+                    console.error('Error loading recent posts:', error);
+                    this.showRecentPostsError();
+                }
+            }
+
+            renderRecentPosts(posts) {
+                const tbody = document.getElementById('recentPostsTable');
+                
+                if (posts.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">No posts found. <a href="posts-manager.html">Create your first post</a></td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                posts.forEach(post => {
+                    const statusBadge = post.status === 'published' 
+                        ? '<span class="badge bg-success">Published</span>'
+                        : '<span class="badge bg-warning text-dark">Draft</span>';
+                    
+                    const postDate = post.published_at || post.created_at;
+                    const formattedDate = new Date(postDate).toLocaleDateString();
+
+                    html += `
+                        <tr>
+                            <td>
+                                <strong>${post.title}</strong>
+                                ${post.excerpt ? `<br><small class="text-muted">${this.truncateText(post.excerpt, 60)}</small>` : ''}
+                            </td>
+                            <td>${statusBadge}</td>
+                            <td>${formattedDate}</td>
+                            <td>
+                                <a href="posts-manager.html" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tbody.innerHTML = html;
+            }
+
+            truncateText(text, maxLength) {
+                if (text.length <= maxLength) return text;
+                return text.substr(0, maxLength) + '...';
+            }
+
+            showError(elementId, message) {
+                document.getElementById(elementId).textContent = message;
+                document.getElementById(elementId).classList.add('text-danger');
+            }
+
+            showRecentPostsError() {
+                document.getElementById('recentPostsTable').innerHTML = `
+                    <tr>
+                        <td colspan="4" class="text-center text-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Error loading recent posts
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            new DashboardLoader();
+        });
     </script>
 </body>
 </html>
