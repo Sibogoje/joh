@@ -123,7 +123,7 @@ class GalleryAPI {
             $stmt->bindValue(':description', $data['description'] ?? '');
             $stmt->bindValue(':filename', $filename);
             $stmt->bindValue(':original_filename', $file['name']);
-            $stmt->bindValue(':file_path', 'uploads/gallery/' . $filename);
+            $stmt->bindValue(':file_path', 'admin/uploads/gallery/' . $filename);
             $stmt->bindValue(':file_size', $file['size']);
             $stmt->bindValue(':mime_type', $file['type']);
             $stmt->bindValue(':width', $width);
