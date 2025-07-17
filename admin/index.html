@@ -74,42 +74,42 @@
     <!-- Development helper script -->
     <script>
         // Enable debug mode (remove in production)
-        const DEBUG_MODE = true;
+        const DEBUG_MODE = false; // Changed to false to prevent login interference
         
         if (DEBUG_MODE) {
             document.getElementById('debugInfo').style.display = 'block';
             document.getElementById('debugApiUrl').textContent = '../api/auth.php';
-        }
-        
-        // Test database connection
-        async function testConnection() {
-            try {
-                const response = await fetch('../api/auth.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: 'test'
-                    })
-                });
-                
-                const result = await response.json();
-                console.log('Connection test result:', result);
-                document.getElementById('debugResponse').textContent = JSON.stringify(result);
-            } catch (error) {
-                console.error('Connection test failed:', error);
-               document.getElementById('debugResponse').textContent = 'Error: ' + error.message;
-            }
-        }
-        
-        // Override the auth login to show debug info
-        if (DEBUG_MODE) {
-            testConnection();
             
-            // Add debug to login form
-            const loginForm = document.getElementById('loginForm');
-            if (loginForm) {
+            // Test database connection
+            async function testConnection() {
+                try {
+                    const response = await fetch('../api/auth.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: 'test'
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    console.log('Connection test result:', result);
+                    document.getElementById('debugResponse').textContent = JSON.stringify(result);
+                } catch (error) {
+                    console.error('Connection test failed:', error);
+                    document.getElementById('debugResponse').textContent = 'Error: ' + error.message;
+                }
+            }
+            
+            testConnection();
+        }
+        
+        // Remove the debug login override that was causing conflicts
+        // The admin-auth.js will handle login properly
+    </script>
+</body>
+</html>
                 loginForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
                     
