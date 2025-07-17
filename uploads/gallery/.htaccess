@@ -1,0 +1,19 @@
+# Gallery uploads protection
+
+# Allow only image files
+<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Deny all other files
+<FilesMatch "\.">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Prevent PHP execution
+<Files *.php>
+    Order Deny,Allow
+    Deny from all
+</Files>
