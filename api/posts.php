@@ -204,6 +204,24 @@ class PostsAPI {
 
         return $stmt->rowCount() > 0;
     }
+
+    public function getPublicPosts() {
+        try {
+            $query = "SELECT p.*, u.full_name as author_name 
+                     FROM posts p 
+                     LEFT JOIN admin_users u ON p.author_id = u.id 
+                     WHERE p.status = 'published' AND p.published_at <= NOW()
+                     ORDER BY p.published_at DESC, p.created_at DESC";
+            
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+
+            return ['success' => true, 'posts' => $stmt->fetchAll()];
+        } catch (Exception $e) {
+            error_log("Get public posts error: " . $e->getMessage());
+            return ['success' => false, 'message' => 'Failed to fetch posts'];
+        }
+    }
 }
 
 // Handle requests
@@ -216,7 +234,13 @@ switch ($method) {
         if (isset($_GET['id'])) {
             echo json_encode($posts->getPost($_GET['id'], $_GET['session_id'] ?? null));
         } else {
-            echo json_encode($posts->getAllPosts($_GET['session_id']));
+            // Check if session_id is provided for admin access
+            if (isset($_GET['session_id'])) {
+                echo json_encode($posts->getAllPosts($_GET['session_id']));
+            } else {
+                // Public access - only published posts
+                echo json_encode($posts->getPublicPosts());
+            }
         }
         break;
     
