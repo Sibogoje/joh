@@ -74,7 +74,7 @@
     <!-- Development helper script -->
     <script>
         // Enable debug mode (remove in production)
-        const DEBUG_MODE = false; // Changed to false to prevent login interference
+        const DEBUG_MODE = true; // Changed back to true to debug login issue
         
         if (DEBUG_MODE) {
             document.getElementById('debugInfo').style.display = 'block';
@@ -103,11 +103,19 @@
             }
             
             testConnection();
+            
+            // Add login debugging
+            const originalLogin = auth.login;
+            auth.login = async function(username, password) {
+                console.log('Login attempt:', { username, password });
+                const result = await originalLogin.call(this, username, password);
+                console.log('Login result:', result);
+                document.getElementById('debugResponse').textContent = 'Login attempt: ' + JSON.stringify({username, password, result});
+                return result;
+            };
         }
         
-        // Remove the debug login override that was causing conflicts
         // The admin-auth.js will handle login properly
     </script>
 </body>
 </html>
- 
