@@ -76,10 +76,10 @@
         // Enable debug mode (remove in production)
         const DEBUG_MODE = true;
         
-        // if (DEBUG_MODE) {
-        //     document.getElementById('debugInfo').style.display = 'block';
-        //     document.getElementById('debugApiUrl').textContent = '../api/auth.php';
-        // }
+        if (DEBUG_MODE) {
+            document.getElementById('debugInfo').style.display = 'block';
+            document.getElementById('debugApiUrl').textContent = '../api/auth.php';
+        }
         
         // Test database connection
         async function testConnection() {
@@ -98,8 +98,8 @@
                 console.log('Connection test result:', result);
                 document.getElementById('debugResponse').textContent = JSON.stringify(result);
             } catch (error) {
-                //console.error('Connection test failed:', error);
-               // document.getElementById('debugResponse').textContent = 'Error: ' + error.message;
+                console.error('Connection test failed:', error);
+               document.getElementById('debugResponse').textContent = 'Error: ' + error.message;
             }
         }
         
