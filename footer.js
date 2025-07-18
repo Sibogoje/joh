@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <hr>
                 <div class="text-center" style="color: #fff;">
                     <p>&copy; ${new Date().getFullYear()} Journey of Hope for Girls and Women in Eswatini. All rights reserved.</p>
-                    <p class="small text-muted">
+                    <p class="small text-white">
                         <i class="fas fa-heart text-danger"></i> 
                         Developed with love by Siboniso Sibandze
                     </p>
