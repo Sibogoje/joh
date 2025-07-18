@@ -5,16 +5,6 @@ class AdminAuth {
         this.sessionKey = 'admin_session_id';
     }
 
-    // Handle login form submission
-    handleLoginFormSubmit(event) {
-        event.preventDefault();
-
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        this.login(username, password);
-    }
-
     // Add cache-busting parameter to URL
     getCacheBustUrl(url) {
         const separator = url.includes('?') ? '&' : '?';
@@ -130,7 +120,8 @@ class AdminAuth {
         const isValid = await this.validateSession();
         if (!isValid) {
             // Only redirect if we're not already on the login page
-            if (window.location.pathname.indexOf('index.html') === -1 && 
+            const currentPath = window.location.pathname;
+            if (!currentPath.includes('index.html') && 
                 window.location.pathname.indexOf('/admin/') !== -1 && 
                 !window.location.pathname.endsWith('/admin/') &&
                 !window.location.pathname.endsWith('/admin/index.html')) {
@@ -162,28 +153,12 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.disabled = true;
 
             try {
-                const response = await fetch(auth.getCacheBustUrl(auth.apiUrl), {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Cache-Control': 'no-cache, no-store, must-revalidate'
-                    },
-                    body: JSON.stringify({
-                        action: 'login',
-                        username: username,
-                        password: password
-                    })
-                });
-
-                const result = await response.json();
-                console.log('Login response:', result);
+                const success = await auth.login(username, password);
                 
-                if (result.success) {
-                    sessionStorage.setItem(auth.sessionKey, result.session_id);
-                    sessionStorage.setItem('admin_user', JSON.stringify(result.user));
+                if (success) {
                     window.location.href = 'dashboard.html';
                 } else {
-                    document.getElementById('loginErrorMessage').textContent = result.message || 'Login failed';
+                    document.getElementById('loginErrorMessage').textContent = 'Invalid username or password';
                     alert.classList.remove('d-none');
                     setTimeout(() => {
                         alert.classList.add('d-none');
