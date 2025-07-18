@@ -5,6 +5,7 @@
     --dark-color: #000000;         /* True Black */
     --light-color: #ffffff;        /* Pure White */
     --text-color: #333333;         /* Dark gray for better readability */
+    --third-color: #cac6e3;       /* Dark Gray for Sidebar */
 }
 
 * {
@@ -126,7 +127,7 @@ nav {
 
 /* Hero Section */
 .hero-section {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    background: linear-gradient(135deg, var(--third-color) 0%, var(--accent-color) 100%);
     position: relative;
     overflow: hidden;
     color: var(--light-color);
