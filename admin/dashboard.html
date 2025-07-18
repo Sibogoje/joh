@@ -339,21 +339,4 @@
     </script>
 </body>
 </html>
-                document.getElementById('recentPostsTable').innerHTML = `
-                    <tr>
-                        <td colspan="4" class="text-center text-danger">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            Error loading recent posts
-                        </td>
-                    </tr>
-                `;
-            }
-        }
 
-        // Initialize dashboard when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            new DashboardLoader();
-        });
-    </script>
-</body>
-</html>
