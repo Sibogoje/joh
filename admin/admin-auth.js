@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (success) {
                     // Always use a relative path from the current directory
                     // This works whether you are at /admin/ or /admin/index.html
-                    window.location.replace('dashboard.html');
+                    window.location.replace('dashboard.php');
                 } else {
                     document.getElementById('loginErrorMessage').textContent = 'Invalid username or password';
                     alert.classList.remove('d-none');
