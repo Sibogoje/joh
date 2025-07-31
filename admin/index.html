@@ -135,7 +135,7 @@
                         // Store session manually
                         sessionStorage.setItem('admin_session_id', result.session_id);
                         sessionStorage.setItem('admin_user', JSON.stringify(result.user));
-                        // Always redirect to dashboard.html (with extension)
+                        // Always redirect to dashboard.php (with extension)
                         window.location.href = 'dashboard.php';
                     } else {
                         document.getElementById('loginErrorMessage').textContent = result.message || 'Login failed';
