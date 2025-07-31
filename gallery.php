@@ -8,10 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
-    <script src="nav.js"></script>
+    <script src="nav.js?v=1.0"></script>
 </head>
 <body>
-    <!-- Navigation will be loaded by nav.js -->
+    <!-- Navigation will be loaded by nav.js?v=1.0 -->
 
     <!-- Hero Section -->
     <section class="bg-primary text-white py-5">
@@ -65,7 +65,7 @@
                             <p class="lead mb-4">
                                 Have photos from our events or activities? We'd love to feature them in our gallery.
                             </p>
-                            <a href="contact.html" class="btn btn-primary btn-lg">Contact Us</a>
+                            <a href="contact.php" class="btn btn-primary btn-lg">Contact Us</a>
                         </div>
                     </div>
                 </div>
@@ -282,7 +282,7 @@
                             <i class="fas fa-camera fa-4x text-muted mb-4"></i>
                             <h4 class="text-muted">Gallery Coming Soon</h4>
                             <p class="text-muted">We're currently updating our photo gallery. Please check back soon to see amazing photos from our events and activities!</p>
-                            <a href="contact.html" class="btn btn-primary">Contact Us</a>
+                            <a href="contact.php" class="btn btn-primary">Contact Us</a>
                         </div>
                     </div>
                 `;

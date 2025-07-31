@@ -12,12 +12,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link fw-bold" href="index.php">Home</a></li>
-                        <li class="nav-item"><a class="nav-link fw-bold" href="about.html">About</a></li>
-                        <li class="nav-item"><a class="nav-link fw-bold" href="programs.html">Programs</a></li>
-                        <li class="nav-item"><a class="nav-link fw-bold" href="get-involved.html">Get Involved</a></li>
-                        <li class="nav-item"><a class="nav-link fw-bold" href="posts.html">Posts</a></li>
+                        <li class="nav-item"><a class="nav-link fw-bold" href="about.php">About</a></li>
+                        <li class="nav-item"><a class="nav-link fw-bold" href="programs.php">Programs</a></li>
+                        <li class="nav-item"><a class="nav-link fw-bold" href="get-involved.html.php">Get Involved</a></li>
+                        <li class="nav-item"><a class="nav-link fw-bold" href="posts.php">Posts</a></li>
                         <li class="nav-item"><a class="nav-link fw-bold" href="gallery.php">Gallery</a></li>
-                        <li class="nav-item"><a class="nav-link fw-bold" href="contact.html">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link fw-bold" href="contact.php">Contact</a></li>
                     </ul>
                 </div>
             </div>

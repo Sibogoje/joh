@@ -68,10 +68,10 @@
     }
     </script>
     
-    <script src="nav.js"></script>
+    <script src="nav.js?v=1.0"></script>
 </head>
 <body>
-    <!-- Navigation will be loaded by nav.js -->
+    <!-- Navigation will be loaded by nav.js?v=1.0 -->
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -86,8 +86,8 @@
                         community circles, and transformative leadership training.
                     </p>
                     <div class="d-flex gap-3">
-                        <a href="programs.html" class="btn btn-warning btn-lg">Our Programs</a>
-                        <a href="get-involved.html" class="btn btn-outline-light btn-lg">Join Us</a>
+                        <a href="programs.php" class="btn btn-warning btn-lg">Our Programs</a>
+                        <a href="get-involved.html.php" class="btn btn-outline-light btn-lg">Join Us</a>
                     </div>
                 </div>
                 <div class="col-lg-6 text-center">
@@ -206,7 +206,7 @@
                     <p class="mb-0">Join our community circles and be part of the transformation.</p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
-                    <a href="contact.html" class="btn btn-dark btn-lg">Get Involved Today</a>
+                    <a href="contact.php" class="btn btn-dark btn-lg">Get Involved Today</a>
                 </div>
             </div>
         </div>

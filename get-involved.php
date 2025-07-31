@@ -8,10 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
-    <script src="nav.js"></script>
+    <script src="nav.js?v=1.0"></script>
 </head>
 <body>
-    <!-- Navigation will be loaded by nav.js -->
+    <!-- Navigation will be loaded by nav.js?v=1.0 -->
 
     <!-- Hero Section -->
     <section class="bg-primary text-white py-5">
@@ -43,7 +43,7 @@
                             <i class="fas fa-users fa-4x text-primary mb-3"></i>
                             <h4>Join a Community Circle</h4>
                             <p>Participate in one of our 42 community circles across Eswatini. Connect with other women and girls in a safe, supportive environment.</p>
-                            <a href="contact.html" class="btn btn-primary">Find a Circle Near You</a>
+                            <a href="contact.php" class="btn btn-primary">Find a Circle Near You</a>
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                             <i class="fas fa-volunteer fa-4x text-primary mb-3"></i>
                             <h4>Become a Volunteer</h4>
                             <p>Join our Pillars of Support network and help provide referral services for gender-based violence issues in your community.</p>
-                            <a href="contact.html" class="btn btn-primary">Apply to Volunteer</a>
+                            <a href="contact.php" class="btn btn-primary">Apply to Volunteer</a>
                         </div>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                             <i class="fas fa-graduation-cap fa-4x text-primary mb-3"></i>
                             <h4>Attend Training Sessions</h4>
                             <p>Participate in our feminist leadership training sessions and learn about your rights, governance, and empowerment strategies.</p>
-                            <a href="contact.html" class="btn btn-primary">Register for Training</a>
+                            <a href="contact.php" class="btn btn-primary">Register for Training</a>
                         </div>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                             <i class="fas fa-heart fa-3x text-danger mb-3"></i>
                             <h5>Financial Support</h5>
                             <p>Help fund our programs, training sessions, and community circles. Your donation directly impacts the lives of women and girls.</p>
-                            <a href="contact.html" class="btn btn-outline-primary">Learn More</a>
+                            <a href="contact.php" class="btn btn-outline-primary">Learn More</a>
                         </div>
                     </div>
                 </div>
@@ -104,7 +104,7 @@
                             <i class="fas fa-handshake fa-3x text-success mb-3"></i>
                             <h5>Partnership Opportunities</h5>
                             <p>Partner with us to expand our reach and impact. We welcome collaborations with organizations that share our values.</p>
-                            <a href="contact.html" class="btn btn-outline-primary">Contact Us</a>
+                            <a href="contact.php" class="btn btn-outline-primary">Contact Us</a>
                         </div>
                     </div>
                 </div>
@@ -136,7 +136,7 @@
                             <span>Dance, art, and creative expression for change</span>
                         </li>
                     </ul>
-                    <a href="contact.html" class="btn btn-warning btn-lg">Get Rising Info</a>
+                    <a href="contact.php" class="btn btn-warning btn-lg">Get Rising Info</a>
                 </div>
                 <div class="col-lg-6">
                     <div class="bg-primary text-white p-5 rounded text-center">
@@ -161,7 +161,7 @@
                     </p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
-                    <a href="contact.html" class="btn btn-dark btn-lg">Contact Us Now</a>
+                    <a href="contact.php" class="btn btn-dark btn-lg">Contact Us Now</a>
                 </div>
             </div>
         </div>

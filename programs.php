@@ -8,10 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
-    <script src="nav.js"></script>
+    <script src="nav.js?v=1.0"></script>
 </head>
 <body>
-    <!-- Navigation will be loaded by nav.js -->
+    <!-- Navigation will be loaded by nav.js?v=1.0 -->
 
     <!-- Hero Section -->
     <section class="bg-primary text-white py-5">
@@ -174,7 +174,7 @@
                     <div class="bg-primary text-white p-5 rounded">
                         <h4 class="mb-3">Get Support</h4>
                         <p>If you or someone you know needs support, our Pillars of Support volunteers are here to help.</p>
-                        <a href="contact.html" class="btn btn-warning">Contact Us</a>
+                        <a href="contact.php" class="btn btn-warning">Contact Us</a>
                     </div>
                 </div>
             </div>

@@ -8,10 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
-    <script src="nav.js"></script>
+    <script src="nav.js?v=1.0"></script>
 </head>
 <body>
-    <!-- Navigation will be loaded by nav.js -->
+    <!-- Navigation will be loaded by nav.js?v=1.0 -->
 
     <!-- Hero Section -->
     <section class="bg-primary text-white py-5">
@@ -48,9 +48,9 @@
                         <div class="card-body">
                             <h5 class="card-title">Quick Links</h5>
                             <ul class="list-unstyled">
-                                <li class="mb-2"><a href="programs.html" class="text-decoration-none">Our Programs</a></li>
-                                <li class="mb-2"><a href="get-involved.html" class="text-decoration-none">Get Involved</a></li>
-                                <li class="mb-2"><a href="contact.html" class="text-decoration-none">Contact Us</a></li>
+                                <li class="mb-2"><a href="programs.php" class="text-decoration-none">Our Programs</a></li>
+                                <li class="mb-2"><a href="get-involved.html.php" class="text-decoration-none">Get Involved</a></li>
+                                <li class="mb-2"><a href="contact.php" class="text-decoration-none">Contact Us</a></li>
                             </ul>
                         </div>
                     </div>
@@ -303,7 +303,7 @@
                                 Our 42 community circles across all four regions work together to create 
                                 safe spaces for women to engage, learn, and grow.
                             </p>
-                            <a href="about.html" class="btn btn-primary">Learn More About Us</a>
+                            <a href="about.php" class="btn btn-primary">Learn More About Us</a>
                         </div>
                     </div>
                 `;
