@@ -20,7 +20,7 @@
         <ul class="sidebar-nav">
             <li><a href="dashboard.php" class="active"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
             <li><a href="posts-manager.php"><i class="fas fa-edit"></i>Manage Posts</a></li>
-            <li><a href="gallery-manager.html"><i class="fas fa-images"></i>Manage Gallery</a></li>
+            <li><a href="gallery-manager.php"><i class="fas fa-images"></i>Manage Gallery</a></li>
             <li><a href="../index.php" target="_blank"><i class="fas fa-external-link-alt"></i>View Website</a></li>
             <li><a href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
         </ul>
@@ -122,7 +122,7 @@
                                 </a>
                             </div>
                             <div class="col-md-4">
-                                <a href="gallery-manager.html?action=upload" class="btn btn-outline-primary w-100 mb-2">
+                                <a href="gallery-manager.php?action=upload" class="btn btn-outline-primary w-100 mb-2">
                                     <i class="fas fa-upload me-2"></i>Upload Images
                                 </a>
                             </div>
