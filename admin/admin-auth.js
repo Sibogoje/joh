@@ -156,7 +156,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const success = await auth.login(username, password);
                 
                 if (success) {
-                    window.location.href = 'dashboard.html';
+                    // Use absolute path to avoid directory issues
+                    window.location.href = window.location.origin + window.location.pathname.replace(/index\.html$/, '') + 'dashboard.html';
                 } else {
                     document.getElementById('loginErrorMessage').textContent = 'Invalid username or password';
                     alert.classList.remove('d-none');
