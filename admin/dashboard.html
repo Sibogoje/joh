@@ -353,6 +353,16 @@
             new DashboardLoader();
         });
     </script>
+    <script>
+        // Prevent unwanted extensionless URL rewrites for dashboard.html
+        if (
+            window.location.pathname.endsWith('/dashboard') ||
+            window.location.pathname.endsWith('/dashboard/')
+        ) {
+            // Force redirect to dashboard.html if user lands on /admin/dashboard or /admin/dashboard/
+            window.location.replace('dashboard.html');
+        }
+    </script>
 </body>
 </html>
 
