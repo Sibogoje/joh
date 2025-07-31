@@ -21,7 +21,7 @@
             <li><a href="dashboard.php" class="active"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
             <li><a href="posts-manager.php"><i class="fas fa-edit"></i>Manage Posts</a></li>
             <li><a href="gallery-manager.html"><i class="fas fa-images"></i>Manage Gallery</a></li>
-            <li><a href="../index.html" target="_blank"><i class="fas fa-external-link-alt"></i>View Website</a></li>
+            <li><a href="../index.php" target="_blank"><i class="fas fa-external-link-alt"></i>View Website</a></li>
             <li><a href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
         </ul>
     </div>
@@ -127,7 +127,7 @@
                                 </a>
                             </div>
                             <div class="col-md-4">
-                                <a href="../index.html" target="_blank" class="btn btn-outline-secondary w-100 mb-2">
+                                <a href="../index.php" target="_blank" class="btn btn-outline-secondary w-100 mb-2">
                                     <i class="fas fa-eye me-2"></i>Preview Website
                                 </a>
                             </div>
@@ -188,7 +188,7 @@
             console.log('Dashboard user:', user);
             if (!sessionId) {
                 alert('No admin session found. You will be redirected to login.');
-                window.location.href = 'index.html';
+                window.location.href = 'index.php';
             }
         });
 

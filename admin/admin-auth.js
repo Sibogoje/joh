@@ -66,7 +66,7 @@ class AdminAuth {
             // Clear all cache-related storage
             sessionStorage.clear();
             localStorage.clear();
-            window.location.href = 'index.html';
+            window.location.href = 'index.php';
         }
     }
 
@@ -121,11 +121,11 @@ class AdminAuth {
         if (!isValid) {
             // Only redirect if we're not already on the login page
             const currentPath = window.location.pathname;
-            if (!currentPath.includes('index.html') && 
+            if (!currentPath.includes('index.php') && 
                 window.location.pathname.indexOf('/admin/') !== -1 && 
                 !window.location.pathname.endsWith('/admin/') &&
-                !window.location.pathname.endsWith('/admin/index.html')) {
-                window.location.href = 'index.html';
+                !window.location.pathname.endsWith('/admin/index.php')) {
+                window.location.href = 'index.php';
             }
         }
         return isValid;
@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (success) {
                     // Always use a relative path from the current directory
-                    // This works whether you are at /admin/ or /admin/index.html
+                    // This works whether you are at /admin/ or /admin/index.php
                     window.location.replace('dashboard.php');
                 } else {
                     document.getElementById('loginErrorMessage').textContent = 'Invalid username or password';

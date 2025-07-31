@@ -21,7 +21,7 @@
             <li><a href="dashboard.php"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
             <li><a href="posts-manager.php" class="active"><i class="fas fa-edit"></i>Manage Posts</a></li>
             <li><a href="gallery-manager.html"><i class="fas fa-images"></i>Manage Gallery</a></li>
-            <li><a href="../index.html" target="_blank"><i class="fas fa-external-link-alt"></i>View Website</a></li>
+            <li><a href="../index.php" target="_blank"><i class="fas fa-external-link-alt"></i>View Website</a></li>
             <li><a href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
         </ul>
     </div>
