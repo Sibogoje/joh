@@ -176,6 +176,16 @@
     <script>
         // DEBUG: Show session info
         document.addEventListener('DOMContentLoaded', function() {
+            // If the URL does NOT end with .html, force it to .html
+            if (
+                window.location.pathname.endsWith('/dashboard') ||
+                window.location.pathname.endsWith('/dashboard/')
+            ) {
+                // This will always reload the correct file
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
             const sessionId = sessionStorage.getItem('admin_session_id');
             const user = sessionStorage.getItem('admin_user');
             console.log('Dashboard sessionId:', sessionId);
