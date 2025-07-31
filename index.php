@@ -68,10 +68,10 @@
     }
     </script>
     
-    <script src="nav.js?v=1.0"></script>
+    <script src="nav.js?v=1.1"></script>
 </head>
 <body>
-    <!-- Navigation will be loaded by nav.js?v=1.0 -->
+    <!-- Navigation will be loaded by nav.js?v=1.1 -->
 
     <!-- Hero Section -->
     <section class="hero-section">
