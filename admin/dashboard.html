@@ -176,13 +176,13 @@
     <script>
         // DEBUG: Show session info
         document.addEventListener('DOMContentLoaded', function() {
-            // If the URL does NOT end with .html, force it to .html
+            // If the URL does NOT end with .html, force it to .html (hard redirect)
             if (
-                window.location.pathname.endsWith('/dashboard') ||
-                window.location.pathname.endsWith('/dashboard/')
+                window.location.pathname.match(/\/dashboard($|\/)/)
+                && !window.location.pathname.endsWith('.html')
             ) {
-                // This will always reload the correct file
-                window.location.href = 'dashboard.html';
+                // Always use absolute path to avoid relative path issues
+                window.location.replace(window.location.origin + window.location.pathname.replace(/\/dashboard\/?$/, '/dashboard.html'));
                 return;
             }
 
