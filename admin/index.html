@@ -135,8 +135,8 @@
                         // Store session manually
                         sessionStorage.setItem('admin_session_id', result.session_id);
                         sessionStorage.setItem('admin_user', JSON.stringify(result.user));
-                        // Use relative redirect to avoid path issues
-                        window.location.href = './dashboard.html';
+                        // Always redirect to dashboard.html (with extension)
+                        window.location.href = 'dashboard.html';
                     } else {
                         document.getElementById('loginErrorMessage').textContent = result.message || 'Login failed';
                         document.getElementById('loginAlert').classList.remove('d-none');
