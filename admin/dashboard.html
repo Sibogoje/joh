@@ -13,17 +13,17 @@
 <body>
     <!-- DEBUG: Dashboard loaded -->
     <div style="position:fixed;top:0;left:0;z-index:9999;background:#ffc;color:#222;padding:4px 12px;font-size:14px;">
-        Dashboard loaded: /admin/dashboard.html
+        Dashboard loaded: /admin/dashboard.php
     </div>
     <!-- Sidebar -->
     <div class="admin-sidebar">
-        <a href="dashboard.html" class="sidebar-brand">
+        <a href="dashboard.php" class="sidebar-brand">
             <img src="../logo.png" alt="Logo" height="30" class="me-2">
             <strong>Admin Panel</strong>
         </a>
         <ul class="sidebar-nav">
-            <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
-            <li><a href="posts-manager.html"><i class="fas fa-edit"></i>Manage Posts</a></li>
+            <li><a href="dashboard.php" class="active"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+            <li><a href="posts-manager.php"><i class="fas fa-edit"></i>Manage Posts</a></li>
             <li><a href="gallery-manager.html"><i class="fas fa-images"></i>Manage Gallery</a></li>
             <li><a href="../index.html" target="_blank"><i class="fas fa-external-link-alt"></i>View Website</a></li>
             <li><a href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
@@ -121,7 +121,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4">
-                                <a href="posts-manager.html?action=new" class="btn btn-admin-primary w-100 mb-2">
+                                <a href="posts-manager.php?action=new" class="btn btn-admin-primary w-100 mb-2">
                                     <i class="fas fa-plus me-2"></i>Create New Post
                                 </a>
                             </div>
@@ -165,7 +165,7 @@
                     </table>
                 </div>
                 <div class="text-center mt-3">
-                    <a href="posts-manager.html" class="btn btn-primary">View All Posts</a>
+                    <a href="posts-manager.php" class="btn btn-primary">View All Posts</a>
                 </div>
             </div>
         </div>
@@ -182,7 +182,7 @@
                 && !window.location.pathname.endsWith('.html')
             ) {
                 // Always use absolute path to avoid relative path issues
-                window.location.replace(window.location.origin + window.location.pathname.replace(/\/dashboard\/?$/, '/dashboard.html'));
+                window.location.replace(window.location.origin + window.location.pathname.replace(/\/dashboard\/?$/, '/dashboard.php'));
                 return;
             }
 
@@ -301,7 +301,7 @@
                 if (posts.length === 0) {
                     tbody.innerHTML = `
                         <tr>
-                            <td colspan="4" class="text-center text-muted">No posts found. <a href="posts-manager.html">Create your first post</a></td>
+                            <td colspan="4" class="text-center text-muted">No posts found. <a href="posts-manager.php">Create your first post</a></td>
                         </tr>
                     `;
                     return;
@@ -325,7 +325,7 @@
                             <td>${statusBadge}</td>
                             <td>${formattedDate}</td>
                             <td>
-                                <a href="posts-manager.html" class="btn btn-sm btn-outline-primary">
+                                <a href="posts-manager.php" class="btn btn-sm btn-outline-primary">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
                             </td>
