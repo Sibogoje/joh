@@ -11,10 +11,6 @@
     <link href="admin-styles.css" rel="stylesheet">
 </head>
 <body>
-    <!-- DEBUG: Dashboard loaded -->
-    <div style="position:fixed;top:0;left:0;z-index:9999;background:#ffc;color:#222;padding:4px 12px;font-size:14px;">
-        Dashboard loaded: /admin/dashboard.php
-    </div>
     <!-- Sidebar -->
     <div class="admin-sidebar">
         <a href="dashboard.php" class="sidebar-brand">
