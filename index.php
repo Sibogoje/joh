@@ -92,7 +92,6 @@ $footerVersion = filemtime(__DIR__ . '/footer.js');
                     </p>
                     <div class="d-flex gap-3">
                         <a href="surveys.php" class="btn btn-light btn-lg text-dark fw-semibold">Surveys</a>
-                        <a href="programs.php" class="btn btn-warning btn-lg">Our Programs</a>
                         <a href="get-involved.php" class="btn btn-outline-light btn-lg">Join Us</a>
                     </div>
                 </div>

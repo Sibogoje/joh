@@ -122,13 +122,10 @@ $footerVersion = filemtime(__DIR__ . '/footer.js');
     <section class="survey-hero">
         <div class="container">
             <div class="row align-items-center g-2">
-                <div class="col-lg-8">
+                <div class="col-12">
                     <p class="text-uppercase fw-bold mb-1" style="letter-spacing: 0.18em;">Survey Document</p>
                     <h1 class="display-5 fw-bold mb-1">Read the Journey of Hope Survey</h1>
                     <p class="lead mb-0">The document is displayed in a scrollable reader below. Pages are rendered as images on canvas, which suppresses browser text highlighting and simple copy behavior.</p>
-                </div>
-                <div class="col-lg-4 text-lg-end">
-                    <a href="programs.php" class="btn btn-light btn-lg text-dark fw-semibold">Back to Programs</a>
                 </div>
             </div>
         </div>
