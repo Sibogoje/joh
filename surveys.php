@@ -19,6 +19,16 @@ $footerVersion = filemtime(__DIR__ . '/footer.js');
         .survey-hero {
             background: linear-gradient(135deg, rgba(255, 102, 0, 0.95), rgba(255, 20, 147, 0.88));
             color: #fff;
+            padding: 3.25rem 0;
+        }
+
+        .survey-hero .container {
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+
+        .survey-hero .lead {
+            font-size: 1.1rem;
         }
 
         .survey-reader-shell {
@@ -95,13 +105,14 @@ $footerVersion = filemtime(__DIR__ . '/footer.js');
     </style>
 </head>
 <body>
-    <section class="survey-hero py-5">
-        <div class="container py-4">
-            <div class="row align-items-center g-4">
+    <section class="survey-hero">
+        <div class="container">
+            <div class="row align-items-center g-3">
                 <div class="col-lg-8">
                     <p class="text-uppercase fw-bold mb-2" style="letter-spacing: 0.18em;">Survey Document</p>
-                    <h1 class="display-4 fw-bold mb-3">Read the Journey of Hope Survey</h1>
-                    <p class="lead mb-0">TThe Complex SRHR Triad</div>
+                    <h1 class="display-5 fw-bold mb-2">Read the Journey of Hope Survey</h1>
+                    <p class="lead mb-0">The document is displayed in a scrollable reader below. Pages are rendered as images on canvas, which suppresses browser text highlighting and simple copy behavior.</p>
+                </div>
                 <div class="col-lg-4 text-lg-end">
                     <a href="programs.php" class="btn btn-light btn-lg text-dark fw-semibold">Back to Programs</a>
                 </div>
