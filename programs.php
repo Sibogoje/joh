@@ -1,3 +1,8 @@
+<?php
+$stylesVersion = filemtime(__DIR__ . '/styles.css');
+$navVersion = filemtime(__DIR__ . '/nav.js');
+$footerVersion = filemtime(__DIR__ . '/footer.js');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +12,8 @@
     <link rel="icon" type="image/png" href="logo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="styles.css" rel="stylesheet">
-    <script src="nav.js?v=1.1"></script>
+    <link href="styles.css?v=<?= $stylesVersion ?>" rel="stylesheet">
+    <script src="nav.js?v=<?= $navVersion ?>"></script>
 </head>
 <body>
     <!-- Navigation will be loaded by nav.js?v=1.1 -->
@@ -202,7 +207,7 @@
     <!-- Footer will be loaded by footer.js -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="footer.js?v=1.0"></script>
+    <script src="footer.js?v=<?= $footerVersion ?>"></script>
 </body>
 </html>
                    

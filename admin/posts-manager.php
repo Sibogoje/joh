@@ -1,3 +1,9 @@
+<?php
+$siteStylesVersion = filemtime(__DIR__ . '/../styles.css');
+$adminStylesVersion = filemtime(__DIR__ . '/admin-styles.css');
+$adminAuthVersion = filemtime(__DIR__ . '/admin-auth.js');
+$postsManagerVersion = filemtime(__DIR__ . '/posts-manager.js');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +13,8 @@
     <link rel="icon" type="image/png" href="../logo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="../styles.css" rel="stylesheet">
-    <link href="admin-styles.css" rel="stylesheet">
+    <link href="../styles.css?v=<?= $siteStylesVersion ?>" rel="stylesheet">
+    <link href="admin-styles.css?v=<?= $adminStylesVersion ?>" rel="stylesheet">
 </head>
 <body>
     <!-- Sidebar -->
@@ -136,7 +142,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="admin-auth.js?v=1.0"></script>
-    <script src="posts-manager.js"></script>
+    <script src="admin-auth.js?v=<?= $adminAuthVersion ?>"></script>
+    <script src="posts-manager.js?v=<?= $postsManagerVersion ?>"></script>
 </body>
 </html>
