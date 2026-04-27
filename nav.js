@@ -1,10 +1,10 @@
 // Navigation component for Journey of Hope website
 document.addEventListener('DOMContentLoaded', function() {
     const navHTML = `
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top py-2">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top py-1">
             <div class="container">
                 <a class="navbar-brand fw-bold" href="index.php">
-                    <img src="logo.png" alt="Journey of Hope Logo" height="35" class="me-2">Journey of Hope
+                    <img src="logo.png" alt="Journey of Hope Logo" height="24" class="me-2">Journey of Hope
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>

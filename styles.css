@@ -17,7 +17,7 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    padding-top: 76px;
+    padding-top: 52px;
     color: var(--text-color);
     background-color: var(--light-color);
 }
@@ -103,13 +103,28 @@ nav {
 
 .navbar-brand {
     color: var(--light-color) !important;
-    font-size: 1.5rem;
+    font-size: 1.15rem;
+    line-height: 1.1;
 }
 
 .navbar-brand img {
     border-radius: 50%;
     background-color: var(--light-color);
-    padding: 2px;
+    padding: 1px;
+}
+
+.navbar {
+    min-height: 52px;
+}
+
+.navbar .container {
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
 }
 
 .navbar-dark .navbar-nav .nav-link {
@@ -273,7 +288,7 @@ nav {
     }
     
     body {
-        padding-top: 66px;
+        padding-top: 52px;
     }
 }
 
