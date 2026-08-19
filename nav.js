@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link fw-bold" href="index.php">Home</a></li>
                         <li class="nav-item"><a class="nav-link fw-bold" href="about.php">About</a></li>
-                        <li class="nav-item"><a class="nav-link fw-bold" href="surveys.php">Researches</a></li>
+                        <li class="nav-item"><a class="nav-link fw-bold" href="surveys.php">Research</a></li>
                         <li class="nav-item"><a class="nav-link fw-bold" href="programs.php">Programs</a></li>
                         <li class="nav-item"><a class="nav-link fw-bold" href="get-involved.php">Get Involved</a></li>
                         <li class="nav-item"><a class="nav-link fw-bold" href="posts.php">Posts</a></li>
