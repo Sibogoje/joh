@@ -25,6 +25,7 @@ $adminAuthVersion = filemtime(__DIR__ . '/admin-auth.js');
         <ul class="sidebar-nav">
             <li><a href="dashboard.php" class="active"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
             <li><a href="posts-manager.php"><i class="fas fa-edit"></i>Manage Posts</a></li>
+            <li><a href="reading-materials-manager.php"><i class="fas fa-book-open"></i>Reading Materials</a></li>
             <li><a href="gallery-manager.php"><i class="fas fa-images"></i>Manage Gallery</a></li>
             <li><a href="../index.php" target="_blank"><i class="fas fa-external-link-alt"></i>View Website</a></li>
             <li><a href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
@@ -110,6 +111,22 @@ $adminAuthVersion = filemtime(__DIR__ . '/admin-auth.js');
                     </div>
                 </div>
             </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stats-card border-0 shadow h-100">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs fw-bold text-danger text-uppercase mb-1">Reading Materials</div>
+                                <div class="h5 mb-0 fw-bold text-gray-800" id="totalMaterials">Loading...</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-book-open fa-2x text-danger"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Quick Actions -->
@@ -129,6 +146,11 @@ $adminAuthVersion = filemtime(__DIR__ . '/admin-auth.js');
                             <div class="col-md-4">
                                 <a href="gallery-manager.php?action=upload" class="btn btn-outline-primary w-100 mb-2">
                                     <i class="fas fa-upload me-2"></i>Upload Images
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="reading-materials-manager.php?action=new" class="btn btn-outline-warning w-100 mb-2">
+                                    <i class="fas fa-book-open me-2"></i>Add Reading Material
                                 </a>
                             </div>
                             <div class="col-md-4">
@@ -202,6 +224,7 @@ $adminAuthVersion = filemtime(__DIR__ . '/admin-auth.js');
             constructor() {
                 this.postsApi = '../api/posts.php';
                 this.galleryApi = '../api/gallery.php';
+                this.materialsApi = '../api/reading_materials.php';
                 this.init();
             }
 
@@ -216,10 +239,31 @@ $adminAuthVersion = filemtime(__DIR__ . '/admin-auth.js');
                     await Promise.all([
                         this.loadPostsStats(),
                         this.loadGalleryStats(),
+                        this.loadMaterialsStats(),
                         this.loadRecentPosts()
                     ]);
                 } catch (error) {
                     console.error('Error loading dashboard data:', error);
+                }
+            }
+
+            async loadMaterialsStats() {
+                try {
+                    const sessionId = auth.getSessionId();
+                    const response = await fetch(`${this.materialsApi}?session_id=${sessionId}&_t=${Date.now()}`, {
+                        headers: { 'Cache-Control': 'no-cache' }
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        document.getElementById('totalMaterials').textContent = result.materials.length;
+                    } else {
+                        this.showError('totalMaterials', 'Error');
+                    }
+                } catch (error) {
+                    console.error('Error loading materials stats:', error);
+                    this.showError('totalMaterials', 'Error');
                 }
             }
 

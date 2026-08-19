@@ -16,7 +16,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         <li class="nav-item"><a class="nav-link fw-bold" href="surveys.php">Research</a></li>
                         <li class="nav-item"><a class="nav-link fw-bold" href="programs.php">Programs</a></li>
                         <li class="nav-item"><a class="nav-link fw-bold" href="get-involved.php">Get Involved</a></li>
-                        <li class="nav-item"><a class="nav-link fw-bold" href="posts.php">Media</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle fw-bold" href="#" id="mediaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Media</a>
+                            <ul class="dropdown-menu" aria-labelledby="mediaDropdown">
+                                <li><a class="dropdown-item" href="posts.php">Media</a></li>
+                                <li><a class="dropdown-item" href="reading-material.php">Reading Material</a></li>
+                            </ul>
+                        </li>
                         <li class="nav-item"><a class="nav-link fw-bold" href="gallery.php">Gallery</a></li>
                         <li class="nav-item"><a class="nav-link fw-bold" href="contact.php">Contact</a></li>
                     </ul>
