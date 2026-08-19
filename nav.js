@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <li class="nav-item"><a class="nav-link fw-bold" href="surveys.php">Research</a></li>
                         <li class="nav-item"><a class="nav-link fw-bold" href="programs.php">Programs</a></li>
                         <li class="nav-item"><a class="nav-link fw-bold" href="get-involved.php">Get Involved</a></li>
-                        <li class="nav-item"><a class="nav-link fw-bold" href="posts.php">Posts</a></li>
+                        <li class="nav-item"><a class="nav-link fw-bold" href="posts.php">Media</a></li>
                         <li class="nav-item"><a class="nav-link fw-bold" href="gallery.php">Gallery</a></li>
                         <li class="nav-item"><a class="nav-link fw-bold" href="contact.php">Contact</a></li>
                     </ul>
