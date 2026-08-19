@@ -8,7 +8,7 @@ $footerVersion = filemtime(__DIR__ . '/footer.js');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Posts - Journey of Hope for Girls and Women in Eswatini</title>
+    <title>Media - Journey of Hope for Girls and Women in Eswatini</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -23,10 +23,10 @@ $footerVersion = filemtime(__DIR__ . '/footer.js');
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-8">
-                    <h1 class="display-4 fw-bold mb-4">Latest Posts & Updates</h1>
+                    <h1 class="display-4 fw-bold mb-4">Media & Articles</h1>
                     <p class="lead">
                         Stay informed about our latest activities, success stories, and community impact. 
-                        Read about the transformation happening across Eswatini.
+                        Read the articles covering the transformation happening across Eswatini.
                     </p>
                 </div>
                 <div class="col-lg-4">
@@ -82,10 +82,10 @@ $footerVersion = filemtime(__DIR__ . '/footer.js');
                 </div>
             </div>
 
-            <!-- Recent Posts Grid -->
+            <!-- Recent Articles Grid -->
             <div class="row mt-5">
                 <div class="col-12">
-                    <h3 class="mb-4">Recent Updates</h3>
+                    <h3 class="mb-4">Recent Articles</h3>
                 </div>
                 
                 <div id="postsGrid" class="col-12">
@@ -207,7 +207,7 @@ $footerVersion = filemtime(__DIR__ . '/footer.js');
                 const recentPosts = this.posts.slice(1, 7); // Skip featured post, show next 6
 
                 if (recentPosts.length === 0) {
-                    postsContainer.innerHTML = '<div class="col-12 text-center"><p class="text-muted">No additional posts available.</p></div>';
+                    postsContainer.innerHTML = '<div class="col-12 text-center"><p class="text-muted">No additional articles available.</p></div>';
                     return;
                 }
 
@@ -315,7 +315,7 @@ $footerVersion = filemtime(__DIR__ . '/footer.js');
 
                 document.getElementById('postsGrid').innerHTML = `
                     <div class="col-12 text-center">
-                        <p class="text-muted">Posts are currently being updated. Please check back soon!</p>
+                        <p class="text-muted">Articles are currently being updated. Please check back soon!</p>
                     </div>
                 `;
             }
