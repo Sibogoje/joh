@@ -15,10 +15,16 @@ require_once 'config/database.php';
 
 class ReadingMaterialsAPI {
     private $conn;
+    private $uploadDir = '../admin/uploads/materials/';
 
     public function __construct() {
         $database = new Database();
         $this->conn = $database->getConnection();
+
+        // Create upload directory if it doesn't exist
+        if (!file_exists($this->uploadDir)) {
+            mkdir($this->uploadDir, 0755, true);
+        }
     }
 
     private function validateSession($session_id) {
@@ -169,15 +175,93 @@ class ReadingMaterialsAPI {
         }
 
         try {
-            $query = "DELETE FROM reading_materials WHERE id = :id";
+            // Get material file path before deletion
+            $query = "SELECT file_path FROM reading_materials WHERE id = :id";
             $stmt = $this->conn->prepare($query);
             $stmt->bindValue(':id', $id);
             $stmt->execute();
+            
+            if ($stmt->rowCount() == 0) {
+                return ['success' => false, 'message' => 'Reading material not found'];
+            }
+            
+            $material = $stmt->fetch();
+            
+            // Delete from database
+            $deleteQuery = "DELETE FROM reading_materials WHERE id = :id";
+            $deleteStmt = $this->conn->prepare($deleteQuery);
+            $deleteStmt->bindValue(':id', $id);
+            $deleteStmt->execute();
+            
+            // Delete the file if it exists
+            if (!empty($material['file_path'])) {
+                $filepath = dirname(__DIR__) . '/' . ltrim($material['file_path'], './');
+                // Fallback: try the stored path relative to admin dir
+                if (!file_exists($filepath)) {
+                    $filepath = __DIR__ . '/..' . $material['file_path'];
+                }
+                if (file_exists($filepath)) {
+                    unlink($filepath);
+                }
+            }
 
             return ['success' => true, 'message' => 'Reading material deleted successfully'];
         } catch (Exception $e) {
             error_log("Delete reading material error: " . $e->getMessage());
             return ['success' => false, 'message' => 'Failed to delete reading material'];
+        }
+    }
+
+    public function uploadDocument($data, $file, $session_id) {
+        $user_id = $this->validateSession($session_id);
+        if (!$user_id) {
+            return ['success' => false, 'message' => 'Unauthorized'];
+        }
+
+        try {
+            // Validate file
+            if (!isset($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) {
+                return ['success' => false, 'message' => 'No file uploaded'];
+            }
+
+            // Allowed document types
+            $allowedExtensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'csv', 'rtf', 'odt'];
+            $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+            if (!in_array($extension, $allowedExtensions)) {
+                return ['success' => false, 'message' => 'Invalid file type. Allowed: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, CSV, RTF, ODT'];
+            }
+
+            // Check file size (max 25MB)
+            $maxSize = 25 * 1024 * 1024;
+            if ($file['size'] > $maxSize) {
+                return ['success' => false, 'message' => 'File too large. Maximum size is 25MB'];
+            }
+
+            // Generate unique filename
+            $filename = uniqid() . '_' . time() . '.' . $extension;
+            $filepath = $this->uploadDir . $filename;
+
+            // Move uploaded file
+            if (!move_uploaded_file($file['tmp_name'], $filepath)) {
+                return ['success' => false, 'message' => 'Failed to save file'];
+            }
+
+            // Update material with file info
+            $materialId = $data['material_id'] ?? null;
+            $updateQuery = "UPDATE reading_materials SET 
+                           file_name = :file_name, file_path = :file_path, updated_at = NOW() 
+                           WHERE id = :id";
+            $updateStmt = $this->conn->prepare($updateQuery);
+            $updateStmt->bindValue(':file_name', $file['name']);
+            $updateStmt->bindValue(':file_path', '../admin/uploads/materials/' . $filename);
+            $updateStmt->bindValue(':id', $materialId);
+            $updateStmt->execute();
+
+            return ['success' => true, 'message' => 'Document uploaded successfully', 'file_path' => '../admin/uploads/materials/' . $filename];
+        } catch (Exception $e) {
+            error_log("Upload document error: " . $e->getMessage());
+            return ['success' => false, 'message' => 'Failed to upload document'];
         }
     }
 
@@ -250,7 +334,14 @@ switch ($method) {
         break;
     
     case 'POST':
-        echo json_encode($materials->createMaterial($input, $input['session_id']));
+        // Check if this is a file upload request (multipart form data)
+        if (isset($_FILES['document'])) {
+            $data = $_POST;
+            $file = $_FILES['document'];
+            echo json_encode($materials->uploadDocument($data, $file, $data['session_id']));
+        } else {
+            echo json_encode($materials->createMaterial($input, $input['session_id']));
+        }
         break;
     
     case 'PUT':

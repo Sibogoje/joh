@@ -4,6 +4,8 @@ class ReadingMaterialsManager {
         this.apiUrl = '../api/reading_materials.php';
         this.materials = [];
         this.currentEditId = null;
+        this.selectedDocumentFile = null;
+        this.currentMaterial = null;
         this.init();
     }
 
@@ -56,7 +58,7 @@ class ReadingMaterialsManager {
         if (this.materials.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="5" class="text-center text-muted py-4">
+                    <td colspan="6" class="text-center text-muted py-4">
                         <i class="fas fa-inbox fa-2x mb-2"></i><br>
                         No reading materials found. <a href="#" onclick="showNewMaterialForm()">Create your first material</a>
                     </td>
@@ -74,6 +76,12 @@ class ReadingMaterialsManager {
             const materialDate = material.published_at || material.created_at;
             const formattedDate = new Date(materialDate).toLocaleDateString();
 
+            const documentCell = material.file_path
+                ? `<a href="${material.file_path}" target="_blank" class="btn btn-sm btn-outline-primary" title="${material.file_name || 'Download'}">
+                       <i class="fas fa-download"></i>
+                   </a>`
+                : '<span class="text-muted"><i class="fas fa-minus"></i></span>';
+
             tbody.innerHTML += `
                 <tr>
                     <td>
@@ -81,6 +89,7 @@ class ReadingMaterialsManager {
                         <br><small class="text-muted">${material.excerpt || 'No excerpt'}</small>
                     </td>
                     <td>${categoryBadge}</td>
+                    <td>${documentCell}</td>
                     <td>${statusBadge}</td>
                     <td>${formattedDate}</td>
                     <td>
@@ -115,13 +124,68 @@ class ReadingMaterialsManager {
             e.preventDefault();
             this.saveMaterial();
         });
+
+        const fileInput = document.getElementById('materialFileInput');
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                this.selectDocument(e.target.files[0]);
+            }
+        });
+    }
+
+    selectDocument(file) {
+        this.selectedDocumentFile = file;
+
+        // Show file info
+        document.getElementById('materialUploadArea').classList.add('d-none');
+        document.getElementById('materialFileInfo').classList.remove('d-none');
+        document.getElementById('materialExistingFile').classList.add('d-none');
+        document.getElementById('materialFileNameDisplay').textContent = file.name;
+        document.getElementById('materialFileSizeDisplay').textContent = this.formatFileSize(file.size);
+    }
+
+    removeSelectedDocument() {
+        this.selectedDocumentFile = null;
+        document.getElementById('materialFileInput').value = '';
+        document.getElementById('materialUploadArea').classList.remove('d-none');
+        document.getElementById('materialFileInfo').classList.add('d-none');
+        // If editing an existing material, show the existing file again
+        if (this.currentMaterial && this.currentMaterial.file_path) {
+            this.showExistingDocument();
+        }
+    }
+
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    showExistingDocument() {
+        document.getElementById('materialExistingFile').classList.remove('d-none');
+        document.getElementById('materialExistingFileName').textContent = this.currentMaterial.file_name || 'Document';
+    }
+
+    downloadDocument() {
+        if (this.currentMaterial && this.currentMaterial.file_path) {
+            window.open(this.currentMaterial.file_path, '_blank');
+        }
     }
 
     showNewMaterialForm() {
         this.currentEditId = null;
+        this.currentMaterial = null;
+        this.selectedDocumentFile = null;
         document.getElementById('editorTitle').textContent = 'Create New Material';
         document.getElementById('materialForm').reset();
         document.getElementById('materialDate').value = new Date().toISOString().split('T')[0];
+        // Reset document upload area
+        document.getElementById('materialFileInput').value = '';
+        document.getElementById('materialUploadArea').classList.remove('d-none');
+        document.getElementById('materialFileInfo').classList.add('d-none');
+        document.getElementById('materialExistingFile').classList.add('d-none');
         document.getElementById('materialsListView').classList.add('d-none');
         document.getElementById('materialEditorView').classList.remove('d-none');
     }
@@ -143,6 +207,8 @@ class ReadingMaterialsManager {
             if (result.success) {
                 const material = result.material;
                 this.currentEditId = id;
+                this.currentMaterial = material;
+                this.selectedDocumentFile = null;
                 
                 document.getElementById('editorTitle').textContent = 'Edit Material';
                 document.getElementById('materialTitle').value = material.title;
@@ -150,9 +216,17 @@ class ReadingMaterialsManager {
                 document.getElementById('materialCategory').value = material.category;
                 document.getElementById('materialStatus').value = material.status;
                 document.getElementById('materialDate').value = material.published_at ? material.published_at.split(' ')[0] : '';
-                document.getElementById('materialFileName').value = material.file_name || '';
-                document.getElementById('materialFilePath').value = material.file_path || '';
                 document.getElementById('materialExcerpt').value = material.excerpt || '';
+                
+                // Reset document upload area and show existing file if present
+                document.getElementById('materialFileInput').value = '';
+                document.getElementById('materialFileInfo').classList.add('d-none');
+                document.getElementById('materialUploadArea').classList.remove('d-none');
+                if (material.file_path) {
+                    this.showExistingDocument();
+                } else {
+                    document.getElementById('materialExistingFile').classList.add('d-none');
+                }
                 
                 document.getElementById('materialsListView').classList.add('d-none');
                 document.getElementById('materialEditorView').classList.remove('d-none');
@@ -172,13 +246,12 @@ class ReadingMaterialsManager {
             category: document.getElementById('materialCategory').value,
             status: document.getElementById('materialStatus').value,
             published_at: document.getElementById('materialDate').value,
-            file_name: document.getElementById('materialFileName').value,
-            file_path: document.getElementById('materialFilePath').value,
             excerpt: document.getElementById('materialExcerpt').value,
             session_id: auth.getSessionId()
         };
 
         try {
+            let materialId;
             let response;
             
             if (this.currentEditId) {
@@ -206,17 +279,44 @@ class ReadingMaterialsManager {
 
             const result = await response.json();
             
-            if (result.success) {
-                await this.loadMaterials(); // Refresh from server
-                this.showMaterialsList();
-                this.showAlert('Reading material saved successfully!', 'success');
-            } else {
+            if (!result.success) {
                 this.showAlert(result.message || 'Failed to save reading material', 'danger');
+                return;
             }
+
+            // Determine material id for document upload
+            materialId = this.currentEditId || result.material_id;
+
+            // Upload document if a file was selected
+            if (this.selectedDocumentFile && materialId) {
+                await this.uploadDocumentFile(materialId);
+            }
+
+            await this.loadMaterials(); // Refresh from server
+            this.showMaterialsList();
+            this.showAlert('Reading material saved successfully!', 'success');
         } catch (error) {
             console.error('Save material error:', error);
             this.showAlert('Failed to save reading material', 'danger');
         }
+    }
+
+    async uploadDocumentFile(materialId) {
+        const formData = new FormData();
+        formData.append('document', this.selectedDocumentFile);
+        formData.append('material_id', materialId);
+        formData.append('session_id', auth.getSessionId());
+
+        const response = await fetch(this.apiUrl, {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+        if (!result.success) {
+            throw new Error(result.message || 'Document upload failed');
+        }
+        this.selectedDocumentFile = null;
     }
 
     async deleteMaterial(id) {
@@ -253,6 +353,8 @@ class ReadingMaterialsManager {
     async showMaterialsList() {
         document.getElementById('materialEditorView').classList.add('d-none');
         document.getElementById('materialsListView').classList.remove('d-none');
+        this.currentMaterial = null;
+        this.selectedDocumentFile = null;
         await this.loadMaterials();
         this.renderMaterialsList();
     }
